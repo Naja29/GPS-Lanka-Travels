@@ -1,0 +1,265 @@
+/* PAGE HERO */
+.page-hero {
+  height: 480px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.page-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url('../images/tours-hero.jpg') center / cover no-repeat;
+  transform: scale(1.05);
+  transition: transform 6s ease;
+}
+.page-hero:hover .page-hero-bg { transform: scale(1.0); }
+.page-hero-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(10,61,61,0.82) 0%, rgba(10,61,61,0.55) 60%, rgba(0,0,0,0.55) 100%);
+}
+.page-hero-content {
+  position: relative; z-index: 1;
+  text-align: center; padding: 0 24px;
+}
+.page-breadcrumb {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(201,168,76,0.18); border: 1px solid rgba(201,168,76,0.35);
+  color: var(--gold-light); font-size: 12px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 6px 18px; border-radius: 50px;
+  margin-bottom: 20px; animation: fadeDown 0.8s 0.2s both;
+}
+.page-breadcrumb a         { color: rgba(255,255,255,0.6); text-decoration: none; transition: color .2s; }
+.page-breadcrumb a:hover   { color: var(--gold-light); }
+.page-breadcrumb .sep      { color: rgba(255,255,255,0.3); }
+.page-hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 300; color: var(--white); line-height: 1.1;
+  animation: fadeUp 0.9s 0.35s both;
+}
+.page-hero-title em        { font-style: italic; color: var(--gold-light); }
+.page-hero-sub {
+  font-size: 16px; color: rgba(255,255,255,0.75);
+  margin-top: 16px; font-weight: 300;
+  animation: fadeUp 0.9s 0.5s both;
+}
+
+/* FILTER BAR */
+.tours-filter-section {
+  background: var(--white);
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  padding: 28px 0;
+  box-shadow: 0 4px 20px rgba(10,61,61,0.06);
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Search box */
+.filter-search {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+.filter-search i {
+  position: absolute; left: 16px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light); font-size: 14px;
+  pointer-events: none;
+}
+.filter-search input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 50px;
+  font-size: 14px; font-family: 'DM Sans', sans-serif;
+  color: var(--text-dark);
+  outline: none; transition: border-color .25s, box-shadow .25s;
+  background: var(--off-white);
+}
+.filter-search input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15,82,82,0.08);
+  background: var(--white);
+}
+.filter-search input::placeholder { color: var(--text-light); }
+
+/* Filter pills */
+.filter-pills {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-pill {
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(0,0,0,0.1);
+  background: var(--off-white);
+  font-size: 13px; font-weight: 500;
+  color: var(--text-mid); cursor: pointer;
+  transition: all .25s; white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
+}
+.filter-pill:hover  { border-color: var(--teal); color: var(--teal); background: rgba(15,82,82,0.05); }
+.filter-pill.active { background: var(--teal-dark); color: var(--white); border-color: var(--teal-dark); }
+
+/* Sort dropdown */
+.filter-sort {
+  padding: 11px 16px;
+  border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 50px;
+  font-size: 13px; font-family: 'DM Sans', sans-serif;
+  color: var(--text-mid); background: var(--off-white);
+  outline: none; cursor: pointer;
+  transition: border-color .25s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23777' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  min-width: 160px;
+}
+.filter-sort:focus  { border-color: var(--teal); }
+
+/* Results count */
+.filter-count {
+  font-size: 13px; color: var(--text-light);
+  white-space: nowrap; margin-left: auto;
+}
+.filter-count span  { font-weight: 700; color: var(--teal-dark); }
+
+/* TOURS GRID */
+.tours-main         { background: var(--off-white); }
+.tours-layout       { display: grid; grid-template-columns: 1fr; gap: 0; }
+
+.tours-grid-wrap    { padding: 60px 0; }
+.tours-grid         {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* Tour Card */
+.tour-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  transition: transform .4s cubic-bezier(.25,.8,.25,1), box-shadow .4s;
+}
+.tour-card:hover    { transform: translateY(-10px); box-shadow: 0 28px 60px rgba(10,61,61,0.16); }
+
+/* Card image */
+.tour-img           { position: relative; height: 240px; overflow: hidden; }
+.tour-img img       { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s; }
+.tour-card:hover .tour-img img { transform: scale(1.08); }
+
+/* Badges */
+.tour-badge {
+  position: absolute; top: 16px; left: 16px;
+  font-size: 11px; font-weight: 600;
+  padding: 5px 14px; border-radius: 50px; letter-spacing: .5px;
+  color: var(--white);
+}
+.badge-popular    { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.badge-bestseller { background: linear-gradient(135deg, var(--gold), #a8782a); }
+.badge-new        { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); }
+.badge-honeymoon  { background: linear-gradient(135deg, #c0392b, #922b21); }
+.badge-family     { background: linear-gradient(135deg, #27ae60, #1e8449); }
+.badge-adventure  { background: linear-gradient(135deg, #e67e22, #ca6f1e); }
+
+.tour-duration {
+  position: absolute; bottom: 16px; right: 16px;
+  background: rgba(10,61,61,0.82); backdrop-filter: blur(8px);
+  color: var(--white); font-size: 12px;
+  padding: 5px 12px; border-radius: 50px;
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* Wishlist heart */
+.tour-wish {
+  position: absolute; top: 14px; right: 14px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: none;
+  transition: background .25s, transform .25s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+.tour-wish:hover          { background: var(--white); transform: scale(1.12); }
+.tour-wish i              { color: #ccc; font-size: 14px; transition: color .25s; }
+.tour-wish.active i       { color: #e74c3c; }
+
+/* Card body */
+.tour-body        { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+.tour-location    {
+  font-size: 11.5px; color: var(--teal); font-weight: 600;
+  letter-spacing: .5px; text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 5px;
+}
+.tour-name        { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: var(--teal-dark); margin-bottom: 8px; line-height: 1.25; }
+.tour-desc        { font-size: 13.5px; color: var(--text-light); line-height: 1.65; margin-bottom: 14px; flex: 1; }
+
+.tour-highlights  { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+.tour-tag         { font-size: 11.5px; color: var(--teal); background: rgba(15,82,82,0.07); border: 1px solid rgba(15,82,82,0.15); padding: 4px 10px; border-radius: 50px; font-weight: 500; }
+
+/* Card footer */
+.tour-footer      { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.07); }
+.tour-price-label { font-size: 11px; color: var(--text-light); }
+.tour-price       { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--teal); line-height: 1; }
+.tour-price span  { font-size: 13px; font-family: 'DM Sans', sans-serif; font-weight: 400; color: var(--text-light); }
+
+/* No results state */
+.tours-empty {
+  text-align: center; padding: 80px 20px;
+  grid-column: 1 / -1; display: none;
+}
+.tours-empty.visible    { display: block; }
+.tours-empty i          { font-size: 56px; color: var(--gold-pale); margin-bottom: 18px; }
+.tours-empty h3         { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--teal-dark); margin-bottom: 10px; }
+.tours-empty p          { color: var(--text-light); font-size: 15px; }
+
+/* CUSTOM TOUR CTA STRIP */
+.tours-custom-cta {
+  background: url('../images/custom-tour-bg.jpg') center / cover no-repeat fixed;
+  position: relative; text-align: center; overflow: hidden;
+}
+.tours-custom-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(10,61,61,0.93), rgba(10,61,61,0.80));
+}
+.tours-custom-inner   { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.tours-custom-cta .section-title { color: var(--white); }
+.tours-custom-cta .section-tag   { color: var(--gold-light); justify-content: center; }
+.tours-custom-cta p              { color: rgba(255,255,255,0.75); font-size: 17px; line-height: 1.75; margin: 16px 0 34px; font-weight: 300; }
+.tours-custom-btns               { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* TOUR FEATURES STRIP (3 icons) */
+.tours-features   { background: var(--teal-dark); padding: 50px 0; }
+.tours-feat-grid  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.06); border-radius: var(--radius-lg); overflow: hidden; }
+.tours-feat-item  { background: var(--teal-dark); padding: 36px 30px; text-align: center; transition: background .3s; }
+.tours-feat-item:hover { background: rgba(255,255,255,0.05); }
+.tours-feat-item i    { font-size: 30px; color: var(--gold); margin-bottom: 14px; display: block; }
+.tours-feat-item h4   { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--white); margin-bottom: 8px; }
+.tours-feat-item p    { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .tours-grid             { grid-template-columns: repeat(2, 1fr); }
+  .tours-feat-grid        { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .tours-grid             { grid-template-columns: 1fr; }
+  .filter-bar             { gap: 10px; }
+  .filter-count           { width: 100%; margin-left: 0; }
+  .tours-custom-btns      { flex-direction: column; align-items: center; }
+  .page-hero              { height: 360px; }
+}

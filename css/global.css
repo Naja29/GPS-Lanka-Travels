@@ -1,0 +1,242 @@
+/* ─── GOOGLE FONTS ─── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* CSS VARIABLES */
+:root {
+  --teal-dark:   #0a3d3d;
+  --teal:        #0f5252;
+  --teal-mid:    #156060;
+  --teal-light:  #1a7575;
+  --gold:        #c9a84c;
+  --gold-light:  #e2c97e;
+  --gold-pale:   #f5ecd4;
+  --white:       #ffffff;
+  --off-white:   #f8f6f0;
+  --text-dark:   #1a1a1a;
+  --text-mid:    #444444;
+  --text-light:  #777777;
+  --shadow:      0 8px 40px rgba(10, 61, 61, 0.13);
+  --shadow-gold: 0 4px 24px rgba(201, 168, 76, 0.22);
+  --radius:      14px;
+  --radius-lg:   22px;
+  --transition:  all 0.3s ease;
+}
+
+/* RESET */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-dark);
+  background: var(--white);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+img { max-width: 100%; display: block; }
+a  { text-decoration: none; }
+ul { list-style: none; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: var(--teal-dark); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+/* LAYOUT UTILITIES */
+.container    { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+.section-pad  { padding: 100px 0; }
+.section-pad-sm { padding: 70px 0; }
+.text-center  { text-align: center; }
+
+/* SECTION LABELS */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--teal);
+  font-size: 12px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.section-tag::before,
+.section-tag::after {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--gold);
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 600;
+  color: var(--teal-dark);
+  line-height: 1.15;
+  margin-bottom: 18px;
+}
+.section-title em { font-style: italic; color: var(--gold); }
+
+.section-subtitle {
+  font-size: 16px;
+  color: var(--text-light);
+  line-height: 1.75;
+  max-width: 580px;
+  font-weight: 300;
+}
+
+.section-header            { text-align: center; margin-bottom: 60px; }
+.section-header .section-subtitle { margin: 0 auto; }
+
+/* BUTTONS */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, #a8782a 100%);
+  color: var(--white);
+  padding: 15px 36px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 30px rgba(201, 168, 76, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(201, 168, 76, 0.5);
+  color: var(--white);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--white);
+  padding: 14px 34px;
+  border-radius: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--white);
+  transform: translateY(-3px);
+  color: var(--white);
+}
+
+.btn-dark {
+  background: var(--teal-dark);
+  color: var(--white);
+  padding: 11px 26px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s, transform 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.btn-dark:hover { background: var(--teal); transform: translateX(3px); color: var(--white); }
+
+/* SCROLL REVEAL CLASSES */
+/* Set by animations.js via IntersectionObserver */
+.reveal, .reveal-left, .reveal-right, .reveal-scale {
+  opacity: 0;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal       { transform: translateY(40px); }
+.reveal-left  { transform: translateX(-40px); }
+.reveal-right { transform: translateX(40px); }
+.reveal-scale { transform: scale(0.9); }
+
+.reveal.visible,
+.reveal-left.visible,
+.reveal-right.visible,
+.reveal-scale.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* WHATSAPP FLOATING BUTTON */
+.whatsapp-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 999;
+  width: 58px;
+  height: 58px;
+  background: #25d366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 30px rgba(37, 211, 102, 0.4);
+  animation: waPulse 2.5s infinite;
+  transition: transform 0.3s;
+}
+.whatsapp-btn:hover { transform: scale(1.12); }
+.whatsapp-btn i     { color: var(--white); font-size: 28px; }
+
+/* BACK TO TOP */
+.back-top {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 999;
+  width: 44px;
+  height: 44px;
+  background: var(--teal-dark);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+.back-top.visible       { opacity: 1; pointer-events: all; }
+.back-top:hover         { transform: translateY(-4px); }
+.back-top i             { color: var(--gold); font-size: 16px; }
+
+/* KEYFRAMES */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes waPulse {
+  0%, 100% { box-shadow: 0 6px 30px rgba(37, 211, 102, 0.4); }
+  50%       { box-shadow: 0 6px 50px rgba(37, 211, 102, 0.7); }
+}
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.1); }
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0);  opacity: 1; }
+  50%       { transform: translateY(8px); opacity: 0.4; }
+}
