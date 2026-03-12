@@ -1,9 +1,3 @@
-/* ============================================================
-   GPS LANKA TRAVELS — slider.js
-   Hero image slider — auto-play, arrows, dots, swipe support
-   Only used on pages that have a .hero-slides element
-   ============================================================ */
-
 document.addEventListener('DOMContentLoaded', () => {
 
   const slides  = document.querySelectorAll('.hero-slide');
@@ -18,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let timer;
   const INTERVAL = 3500; // 3.5s — professional feel, not too fast/slow
 
-  /* ── Go to specific slide ── */
+  /* Go to specific slide */
   function goTo(n) {
     slides[current].classList.remove('active');
     dots[current]?.classList.remove('active');
@@ -29,26 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
     dots[current]?.classList.add('active');
   }
 
-  /* ── Auto-play ── */
+  /* Auto-play */
   function startTimer() {
     clearInterval(timer);
     timer = setInterval(() => goTo(current + 1), INTERVAL);
   }
 
-  /* ── Init ── */
+  /* Init */
   goTo(0);
   startTimer();
 
-  /* ── Arrow buttons ── */
+  /* Arrow buttons */
   nextBtn?.addEventListener('click', () => { goTo(current + 1); startTimer(); });
   prevBtn?.addEventListener('click', () => { goTo(current - 1); startTimer(); });
 
-  /* ── Dot buttons ── */
+  /* Dot buttons */
   dots.forEach((dot, i) => {
     dot.addEventListener('click', () => { goTo(i); startTimer(); });
   });
 
-  /* ── Touch / swipe support ── */
+  /* Touch / swipe support */
   let touchStartX = 0;
   const heroEl = document.querySelector('.hero');
 
@@ -64,13 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /* ── Keyboard support ── */
+  /* Keyboard support */
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') { goTo(current + 1); startTimer(); }
     if (e.key === 'ArrowLeft')  { goTo(current - 1); startTimer(); }
   });
 
-  /* ── Pause on hover ── */
+  /* Pause on hover */
   const heroSection = document.querySelector('.hero');
   heroSection?.addEventListener('mouseenter', () => clearInterval(timer));
   heroSection?.addEventListener('mouseleave', startTimer);

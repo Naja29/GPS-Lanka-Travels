@@ -1,12 +1,6 @@
-/* ============================================================
-   GPS LANKA TRAVELS — home.js
-   Homepage-only JavaScript:
-   - Testimonial carousel
-   ============================================================ */
-
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* ─── TESTIMONIAL SLIDER ────────────────────────────────── */
+  /* TESTIMONIAL SLIDER */
   const track    = document.getElementById('testiTrack');
   const prevBtn  = document.getElementById('testiPrev');
   const nextBtn  = document.getElementById('testiNext');
@@ -53,3 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', update);
 
 });
+
+/* Partners marquee — duplicate track for seamless loop */
+(function() {
+  const track = document.getElementById('partnersTrack');
+  const wrap  = document.getElementById('partnersMarquee');
+  if (!track || !wrap) return;
+  // Clone track for infinite loop
+  const clone = track.cloneNode(true);
+  clone.setAttribute('aria-hidden', 'true');
+  wrap.appendChild(clone);
+})();

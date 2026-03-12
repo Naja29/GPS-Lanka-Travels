@@ -1,8 +1,3 @@
-/* ============================================================
-   GPS LANKA TRAVELS — tours.js
-   Filter by category, live search, sort, wishlist toggle
-   ============================================================ */
-
 document.addEventListener('DOMContentLoaded', () => {
 
   const cards      = document.querySelectorAll('.tour-card[data-category]');
@@ -16,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeCategory = 'all';
   let searchQuery    = '';
 
-  /* ── Filter + Search ── */
+  /* Filter + Search */
   function applyFilters() {
     let visible = 0;
     const q = searchQuery.toLowerCase();
@@ -44,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ── Sort ── */
+  /* Sort */
   function applySort(val) {
     const cardArr = [...cards].filter(c => c.style.display !== 'none');
     const allCards = [...cards];
@@ -65,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allCards.forEach(card => grid.appendChild(card));
   }
 
-  /* ── Category pills ── */
+  /* Category pills */
   pills.forEach(pill => {
     pill.addEventListener('click', () => {
       pills.forEach(p => p.classList.remove('active'));
@@ -75,18 +70,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ── Search ── */
+  /* Search */
   searchInput?.addEventListener('input', e => {
     searchQuery = e.target.value;
     applyFilters();
   });
 
-  /* ── Sort ── */
+  /* Sort */
   sortSelect?.addEventListener('change', e => {
     applySort(e.target.value);
   });
 
-  /* ── Wishlist heart toggle ── */
+  /* Wishlist heart toggle */
   document.querySelectorAll('.tour-wish').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
@@ -94,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ── Init ── */
+  /* Init */
   applyFilters();
 
 });

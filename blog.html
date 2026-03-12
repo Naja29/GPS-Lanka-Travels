@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="GPS Lanka Travels Blog | Travel tips, destination guides, culture, wildlife and everything you need to know about Sri Lanka."/>
+  <title>Blog | GPS Lanka Travels</title>
+  <link rel="icon" type="image/png" href="images/favicon.png"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="css/global.css"/>
+  <link rel="stylesheet" href="css/header.css"/>
+  <link rel="stylesheet" href="css/footer.css"/>
+  <link rel="stylesheet" href="css/blog.css"/>
+</head>
+<body data-page="blog">
+
+  <div id="header-placeholder"></div>
+
+  <section class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-content">
+      <div class="page-breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="sep"><i class="fas fa-chevron-right"></i></span>
+        Blog
+      </div>
+      <h1 class="page-hero-title">Travel <em>Blog</em></h1>
+      <p class="page-hero-sub">Stories, tips and guides to inspire your perfect Sri Lanka journey</p>
+    </div>
+  </section>
+
+
+  <!--  FILTER BAR -->
+  <div class="blog-filter-section">
+    <div class="container">
+      <div class="blog-filter-bar">
+        <button class="blog-filter-pill active" data-filter="all">All Posts</button>
+        <button class="blog-filter-pill" data-filter="tips">Travel Tips</button>
+        <button class="blog-filter-pill" data-filter="culture">Culture</button>
+        <button class="blog-filter-pill" data-filter="wildlife">Wildlife</button>
+        <button class="blog-filter-pill" data-filter="beach">Beach</button>
+        <button class="blog-filter-pill" data-filter="hill">Hill Country</button>
+        <button class="blog-filter-pill" data-filter="food">Food & Cuisine</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MAIN CONTENT -->
+  <div class="blog-main section-pad">
+    <div class="container">
+      <div class="blog-layout">
+
+        <!-- POSTS COLUMN -->
+        <div class="blog-posts-col">
+
+          <!-- Featured Post -->
+          <div class="blog-featured reveal">
+            <a href="blog-detail.html" class="blog-featured-card">
+              <div class="blog-featured-img">
+                <img src="images/dest-ella.jpg" alt="Top 10 Things to Do in Sri Lanka"/>
+                <div class="blog-featured-badge"><i class="fas fa-star"></i> Featured</div>
+                <div class="blog-featured-cat">Travel Tips</div>
+              </div>
+              <div class="blog-featured-body">
+                <div class="section-tag">Editor's Pick</div>
+                <h2>Top 10 Things to Do in Sri Lanka for First-Time Visitors</h2>
+                <div class="blog-meta">
+                  <span><i class="fas fa-user"></i> GPS Lanka Travels</span>
+                  <span><i class="fas fa-calendar-alt"></i> March 2025</span>
+                  <span><i class="fas fa-clock"></i> 10 min read</span>
+                </div>
+                <p>Sri Lanka is one of the most rewarding destinations in Asia — a compact island that packs an extraordinary range of experiences into every kilometre. From ancient ruins and tea-scented hill stations to whale watching and world-class surf, here are our top 10 must-dos for first-time visitors.</p>
+                <span class="read-more-btn">Read Full Article <i class="fas fa-arrow-right"></i></span>
+              </div>
+            </a>
+          </div>
+
+          <div class="blog-grid stagger-children" id="blogGrid">
+
+            <a href="blog-detail.html" class="blog-card reveal" data-cat="wildlife">
+              <div class="blog-card-img">
+                <img src="images/dest-minneriya.jpg" alt="Yala National Park"/>
+                <span class="blog-card-cat bcat-wildlife">Wildlife</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-card-meta">
+                  <span><i class="fas fa-calendar-alt"></i> Feb 2025</span>
+                  <span><i class="fas fa-clock"></i> 7 min</span>
+                </div>
+                <div class="blog-card-title">Yala National Park: The Complete Safari Guide for 2025</div>
+                <div class="blog-card-desc">Leopards, elephants, sloth bears and crocodiles — everything you need to know before your Yala safari adventure.</div>
+                <div class="blog-card-footer">
+                  <div class="blog-card-author">
+                    <div class="blog-card-author-dot"><i class="fas fa-user"></i></div>
+                    GPS Lanka Team
+                  </div>
+                  <span class="read-more-btn" style="font-size:12px;">Read <i class="fas fa-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+
+            <a href="blog-detail.html" class="blog-card reveal" data-cat="culture">
+              <div class="blog-card-img">
+                <img src="images/dest-dambulla.jpg" alt="Temple of Tooth Kandy"/>
+                <span class="blog-card-cat bcat-culture">Culture</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-card-meta">
+                  <span><i class="fas fa-calendar-alt"></i> Jan 2025</span>
+                  <span><i class="fas fa-clock"></i> 6 min</span>
+                </div>
+                <div class="blog-card-title">A Guide to Sri Lanka's Sacred Buddhist Temples & Pilgrimage Sites</div>
+                <div class="blog-card-desc">From the Temple of the Tooth Relic in Kandy to the ancient cave temples of Dambulla — a spiritual journey through Sri Lanka.</div>
+                <div class="blog-card-footer">
+                  <div class="blog-card-author">
+                    <div class="blog-card-author-dot"><i class="fas fa-user"></i></div>
+                    GPS Lanka Team
+                  </div>
+                  <span class="read-more-btn" style="font-size:12px;">Read <i class="fas fa-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+
+            <a href="blog-detail.html" class="blog-card reveal" data-cat="beach">
+              <div class="blog-card-img">
+                <img src="images/dest-unawatuna.jpg" alt="Best Beaches Sri Lanka"/>
+                <span class="blog-card-cat bcat-beach">Beach</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-card-meta">
+                  <span><i class="fas fa-calendar-alt"></i> Jan 2025</span>
+                  <span><i class="fas fa-clock"></i> 8 min</span>
+                </div>
+                <div class="blog-card-title">The 10 Best Beaches in Sri Lanka — South Coast to East Coast</div>
+                <div class="blog-card-desc">Mirissa, Unawatuna, Arugam Bay, Tangalle — a complete guide to Sri Lanka's most beautiful stretches of coastline.</div>
+                <div class="blog-card-footer">
+                  <div class="blog-card-author">
+                    <div class="blog-card-author-dot"><i class="fas fa-user"></i></div>
+                    GPS Lanka Team
+                  </div>
+                  <span class="read-more-btn" style="font-size:12px;">Read <i class="fas fa-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+
+            <a href="blog-detail.html" class="blog-card reveal" data-cat="hill">
+              <div class="blog-card-img">
+                <img src="images/dest-waterfalls.jpg" alt="Ella Sri Lanka"/>
+                <span class="blog-card-cat bcat-hill">Hill Country</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-card-meta">
+                  <span><i class="fas fa-calendar-alt"></i> Dec 2024</span>
+                  <span><i class="fas fa-clock"></i> 9 min</span>
+                </div>
+                <div class="blog-card-title">The Ultimate Ella Travel Guide — Hikes, Trains & Tea Estates</div>
+                <div class="blog-card-desc">Ella Rock, Nine Arch Bridge, Little Adam's Peak — your complete guide to spending 3 perfect days in Sri Lanka's favourite hill town.</div>
+                <div class="blog-card-footer">
+                  <div class="blog-card-author">
+                    <div class="blog-card-author-dot"><i class="fas fa-user"></i></div>
+                    GPS Lanka Team
+                  </div>
+                  <span class="read-more-btn" style="font-size:12px;">Read <i class="fas fa-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+
+            <a href="blog-detail.html" class="blog-card reveal" data-cat="tips">
+              <div class="blog-card-img">
+                <img src="images/tour-cultural.jpg" alt="Sri Lanka Travel Tips"/>
+                <span class="blog-card-cat bcat-tips">Travel Tips</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-card-meta">
+                  <span><i class="fas fa-calendar-alt"></i> Dec 2024</span>
+                  <span><i class="fas fa-clock"></i> 5 min</span>
+                </div>
+                <div class="blog-card-title">When is the Best Time to Visit Sri Lanka? A Month-by-Month Guide</div>
+                <div class="blog-card-desc">Sri Lanka's two monsoon seasons mean the best time to visit depends on which part of the island you want to explore.</div>
+                <div class="blog-card-footer">
+                  <div class="blog-card-author">
+                    <div class="blog-card-author-dot"><i class="fas fa-user"></i></div>
+                    GPS Lanka Team
+                  </div>
+                  <span class="read-more-btn" style="font-size:12px;">Read <i class="fas fa-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+
+            <a href="blog-detail.html" class="blog-card reveal" data-cat="food">
+              <div class="blog-card-img">
+                <img src="images/dest-hatton.jpg" alt="Sri Lanka Food"/>
+                <span class="blog-card-cat bcat-food">Food & Cuisine</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-card-meta">
+                  <span><i class="fas fa-calendar-alt"></i> Nov 2024</span>
+                  <span><i class="fas fa-clock"></i> 6 min</span>
+                </div>
+                <div class="blog-card-title">Sri Lanka's Must-Try Foods — A Delicious Guide to Local Cuisine</div>
+                <div class="blog-card-desc">Rice and curry, kottu roti, hoppers, pol sambol — a food lover's guide to the incredible flavours of Sri Lanka.</div>
+                <div class="blog-card-footer">
+                  <div class="blog-card-author">
+                    <div class="blog-card-author-dot"><i class="fas fa-user"></i></div>
+                    GPS Lanka Team
+                  </div>
+                  <span class="read-more-btn" style="font-size:12px;">Read <i class="fas fa-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+
+            <a href="blog-detail.html" class="blog-card reveal" data-cat="tips">
+              <div class="blog-card-img">
+                <img src="images/tour-adventure.jpg" alt="Sri Lanka Packing List"/>
+                <span class="blog-card-cat bcat-tips">Travel Tips</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-card-meta">
+                  <span><i class="fas fa-calendar-alt"></i> Nov 2024</span>
+                  <span><i class="fas fa-clock"></i> 4 min</span>
+                </div>
+                <div class="blog-card-title">The Ultimate Sri Lanka Packing List — What to Bring & What to Skip</div>
+                <div class="blog-card-desc">From temple visits to jungle safaris — exactly what to pack for a comfortable and stylish Sri Lanka holiday.</div>
+                <div class="blog-card-footer">
+                  <div class="blog-card-author">
+                    <div class="blog-card-author-dot"><i class="fas fa-user"></i></div>
+                    GPS Lanka Team
+                  </div>
+                  <span class="read-more-btn" style="font-size:12px;">Read <i class="fas fa-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+
+            <a href="blog-detail.html" class="blog-card reveal" data-cat="culture">
+              <div class="blog-card-img">
+                <img src="images/dest-jaffna.jpg" alt="Jaffna Culture"/>
+                <span class="blog-card-cat bcat-culture">Culture</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-card-meta">
+                  <span><i class="fas fa-calendar-alt"></i> Oct 2024</span>
+                  <span><i class="fas fa-clock"></i> 7 min</span>
+                </div>
+                <div class="blog-card-title">Discovering Jaffna — Sri Lanka's Vibrant Tamil Cultural Capital</div>
+                <div class="blog-card-desc">Ancient Hindu temples, colonial forts, unique cuisine and warm hospitality — why Jaffna deserves a place on every Sri Lanka itinerary.</div>
+                <div class="blog-card-footer">
+                  <div class="blog-card-author">
+                    <div class="blog-card-author-dot"><i class="fas fa-user"></i></div>
+                    GPS Lanka Team
+                  </div>
+                  <span class="read-more-btn" style="font-size:12px;">Read <i class="fas fa-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+
+          </div>
+
+          <!-- Load More -->
+          <div class="blog-load-more reveal">
+            <button class="btn-primary" style="padding:14px 44px;">
+              <i class="fas fa-plus"></i> Load More Posts
+            </button>
+          </div>
+
+        </div>
+
+
+        <!-- SIDEBAR -->
+        <div class="blog-sidebar">
+
+          <!-- Search -->
+          <div class="blog-sidebar-card reveal">
+            <h4>Search Blog</h4>
+            <div class="blog-search-wrap">
+              <input type="text" placeholder="Search articles…"/>
+              <button><i class="fas fa-search"></i></button>
+            </div>
+          </div>
+
+          <!-- Categories -->
+          <div class="blog-sidebar-card reveal">
+            <h4>Categories</h4>
+            <div class="blog-cats-list">
+              <a href="#" class="blog-cat-item">
+                <span><i class="fas fa-lightbulb"></i> Travel Tips</span>
+                <span class="blog-cat-count">12</span>
+              </a>
+              <a href="#" class="blog-cat-item">
+                <span><i class="fas fa-landmark"></i> Culture & Heritage</span>
+                <span class="blog-cat-count">8</span>
+              </a>
+              <a href="#" class="blog-cat-item">
+                <span><i class="fas fa-paw"></i> Wildlife & Safari</span>
+                <span class="blog-cat-count">6</span>
+              </a>
+              <a href="#" class="blog-cat-item">
+                <span><i class="fas fa-umbrella-beach"></i> Beach & Coast</span>
+                <span class="blog-cat-count">9</span>
+              </a>
+              <a href="#" class="blog-cat-item">
+                <span><i class="fas fa-mountain"></i> Hill Country</span>
+                <span class="blog-cat-count">7</span>
+              </a>
+              <a href="#" class="blog-cat-item">
+                <span><i class="fas fa-utensils"></i> Food & Cuisine</span>
+                <span class="blog-cat-count">5</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Recent Posts -->
+          <div class="blog-sidebar-card reveal">
+            <h4>Recent Posts</h4>
+            <div class="recent-posts-list">
+              <a href="blog-detail.html" class="recent-post-item">
+                <div class="recent-post-img"><img src="images/dest-ella.jpg" alt="Top 10 Things"/></div>
+                <div>
+                  <div class="recent-post-title">Top 10 Things to Do in Sri Lanka for First-Time Visitors</div>
+                  <div class="recent-post-date"><i class="fas fa-calendar-alt"></i> March 2025</div>
+                </div>
+              </a>
+              <a href="blog-detail.html" class="recent-post-item">
+                <div class="recent-post-img"><img src="images/dest-minneriya.jpg" alt="Yala Safari"/></div>
+                <div>
+                  <div class="recent-post-title">Yala National Park: The Complete Safari Guide for 2025</div>
+                  <div class="recent-post-date"><i class="fas fa-calendar-alt"></i> Feb 2025</div>
+                </div>
+              </a>
+              <a href="blog-detail.html" class="recent-post-item">
+                <div class="recent-post-img"><img src="images/dest-unawatuna.jpg" alt="Best Beaches"/></div>
+                <div>
+                  <div class="recent-post-title">The 10 Best Beaches in Sri Lanka</div>
+                  <div class="recent-post-date"><i class="fas fa-calendar-alt"></i> Jan 2025</div>
+                </div>
+              </a>
+              <a href="blog-detail.html" class="recent-post-item">
+                <div class="recent-post-img"><img src="images/dest-waterfalls.jpg" alt="Ella Guide"/></div>
+                <div>
+                  <div class="recent-post-title">The Ultimate Ella Travel Guide</div>
+                  <div class="recent-post-date"><i class="fas fa-calendar-alt"></i> Dec 2024</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Tags -->
+          <div class="blog-sidebar-card reveal">
+            <h4>Popular Tags</h4>
+            <div class="blog-tags-cloud">
+              <a href="#" class="blog-tag">Sri Lanka</a>
+              <a href="#" class="blog-tag">Ella</a>
+              <a href="#" class="blog-tag">Sigiriya</a>
+              <a href="#" class="blog-tag">Safari</a>
+              <a href="#" class="blog-tag">Beach</a>
+              <a href="#" class="blog-tag">Kandy</a>
+              <a href="#" class="blog-tag">Tea Country</a>
+              <a href="#" class="blog-tag">Mirissa</a>
+              <a href="#" class="blog-tag">Travel Tips</a>
+              <a href="#" class="blog-tag">Food</a>
+              <a href="#" class="blog-tag">Budget Travel</a>
+              <a href="#" class="blog-tag">Wildlife</a>
+            </div>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="newsletter-card reveal">
+            <h4 style="color:var(--white);border-bottom-color:rgba(201,168,76,0.3);margin-bottom:12px;padding-bottom:12px;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;">
+              Travel Newsletter
+            </h4>
+            <p>Get the latest Sri Lanka travel tips, destination guides and exclusive tour deals delivered to your inbox.</p>
+            <div class="newsletter-input-wrap">
+              <input type="email" placeholder="Your email address"/>
+              <button class="newsletter-btn">
+                <i class="fas fa-paper-plane"></i> Subscribe
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- CTA -->
+  <section class="blog-cta section-pad">
+    <div class="container">
+      <div class="blog-cta-inner reveal">
+        <div class="section-tag">Ready to Visit?</div>
+        <h2 class="section-title">Turn Inspiration into <em>Reality</em></h2>
+        <p>Loved what you read? Let us build your perfect Sri Lanka itinerary — tailored to everything you've dreamed about.</p>
+        <div class="blog-cta-btns">
+          <a href="tours.html"                 class="btn-primary"><i class="fas fa-map-marked-alt"></i> Browse Tour Packages</a>
+          <a href="contact.html"               class="btn-outline"><i class="fas fa-pencil-alt"></i> Plan My Custom Tour</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scenic banner -->
+  <div class="scenic-banner">
+    <div class="scenic-banner-text reveal">
+      <h2>Every Journey Begins with<br><strong>A Single Story</strong></h2>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/components.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    // Filter pills
+    const pills = document.querySelectorAll('.blog-filter-pill');
+    const cards = document.querySelectorAll('.blog-card');
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const f = pill.dataset.filter;
+        cards.forEach(c => {
+          c.style.display = (f === 'all' || c.dataset.cat === f) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

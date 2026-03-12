@@ -1,26 +1,3 @@
-/* ============================================================
-   GPS LANKA TRAVELS — components.js
-   Header + Footer injected via template literals.
-   No server needed — works by opening .html directly in browser.
-
-   Usage on every page:
-     <div id="header-placeholder"></div>
-     <div id="footer-placeholder"></div>
-     <script src="js/components.js"></script>
-
-   To set active nav link, add data-page attribute to <body>:
-     <body data-page="home">
-     <body data-page="about">
-     <body data-page="tours">
-     <body data-page="destinations">
-     <body data-page="gallery">
-     <body data-page="blog">
-     <body data-page="contact">
-   ============================================================ */
-
-/* ══════════════════════════════════════════════════════════
-   HEADER TEMPLATE
-   ══════════════════════════════════════════════════════════ */
 const headerHTML = `
 <!-- TOP BAR -->
 <div class="topbar">
@@ -47,9 +24,6 @@ const headerHTML = `
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
 
-    <!-- Logo
-         Replace logo.png with your actual logo file in images/
-         If no image, the icon fallback will show automatically -->
     <a href="index.html" class="logo">
       <img
         src="images/logo.png"
@@ -72,6 +46,7 @@ const headerHTML = `
       <li><a href="about.html"        class="nav-link" data-nav="about">About Us</a></li>
       <li><a href="tours.html"        class="nav-link" data-nav="tours">All Sri Lanka Tours</a></li>
       <li><a href="destinations.html" class="nav-link" data-nav="destinations">Destinations</a></li>
+      <li><a href="blog.html"         class="nav-link" data-nav="blog">Blog</a></li>
       <li><a href="gallery.html"      class="nav-link" data-nav="gallery">Gallery</a></li>
       <li><a href="contact.html"      class="nav-link" data-nav="contact">Contact</a></li>
       <li><a href="contact.html"      class="nav-link btn-book">Book Now</a></li>
@@ -98,6 +73,7 @@ const headerHTML = `
     <li><a href="about.html">About Us</a></li>
     <li><a href="tours.html">All Sri Lanka Tours</a></li>
     <li><a href="destinations.html">Destinations</a></li>
+    <li><a href="blog.html">Blog</a></li>
     <li><a href="gallery.html">Gallery</a></li>
     <li><a href="contact.html">Contact</a></li>
     <li><a href="contact.html" class="book-mobile">Book Now</a></li>
@@ -105,9 +81,7 @@ const headerHTML = `
 </div>
 `;
 
-/* ══════════════════════════════════════════════════════════
-   FOOTER TEMPLATE
-   ══════════════════════════════════════════════════════════ */
+/* FOOTER TEMPLATE */
 const footerHTML = `
 <footer class="footer">
   <div class="footer-top">
@@ -153,6 +127,7 @@ const footerHTML = `
             <li><a href="about.html">About Us</a></li>
             <li><a href="tours.html">All Tours</a></li>
             <li><a href="destinations.html">Destinations</a></li>
+            <li><a href="blog.html">Blog</a></li>
             <li><a href="gallery.html">Gallery</a></li>
             <li><a href="contact.html">Contact Us</a></li>
           </ul>
@@ -162,13 +137,13 @@ const footerHTML = `
         <div class="footer-col">
           <h4>Tour Types</h4>
           <ul class="footer-links">
-            <li><a href="tours.html">Cultural Tours</a></li>
-            <li><a href="tours.html">Wildlife Safari</a></li>
-            <li><a href="tours.html">Beach Holidays</a></li>
-            <li><a href="tours.html">Adventure Tours</a></li>
-            <li><a href="tours.html">Honeymoon Tours</a></li>
-            <li><a href="tours.html">Family Packages</a></li>
-            <li><a href="tours.html">Day Tours</a></li>
+            <li><a href="tours.html#filter=cultural">Cultural Tours</a></li>
+            <li><a href="tours.html#filter=wildlife">Wildlife Safari</a></li>
+            <li><a href="tours.html#filter=beach">Beach Holidays</a></li>
+            <li><a href="tours.html#filter=adventure">Adventure Tours</a></li>
+            <li><a href="tours.html#filter=honeymoon">Honeymoon Tours</a></li>
+            <li><a href="tours.html#filter=family">Family Packages</a></li>
+            <li><a href="tours.html#filter=day">Day Tours</a></li>
           </ul>
         </div>
 
@@ -207,7 +182,7 @@ const footerHTML = `
       <span>
         © ${new Date().getFullYear()} GPS Lanka Travels. All rights reserved.
         &nbsp;|&nbsp;
-        <span class="designed-by">Designed by <a href="#" target="_blank">Asseminate</a></span>
+        <span class="designed-by">Designed by <a href="https://www.asseminate.com/" target="_blank">Asseminate</a></span>
       </span>
       <span>
         <a href="privacy.html">Privacy Policy</a>
@@ -221,19 +196,18 @@ const footerHTML = `
 </footer>
 
 <!-- WhatsApp Floating Button -->
-<a href="https://wa.me/94770489956" class="whatsapp-btn" target="_blank" title="Chat on WhatsApp">
+<a href="https://wa.me/94770489956" class="float-wa" target="_blank" title="Chat on WhatsApp">
   <i class="fab fa-whatsapp"></i>
+  <span class="float-wa-tooltip">Chat on WhatsApp</span>
 </a>
 
 <!-- Back to Top -->
-<div class="back-top" id="backTop" title="Back to top">
+<button class="back-top" id="backTop" title="Back to top">
   <i class="fas fa-chevron-up"></i>
-</div>
+</button>
 `;
 
-/* ══════════════════════════════════════════════════════════
-   INJECT HEADER & FOOTER
-   ══════════════════════════════════════════════════════════ */
+/* INJECT HEADER & FOOTER */
 (function () {
   // Inject header
   const headerEl = document.getElementById('header-placeholder');
@@ -243,13 +217,13 @@ const footerHTML = `
   const footerEl = document.getElementById('footer-placeholder');
   if (footerEl) footerEl.innerHTML = footerHTML;
 
-  // ── Set active nav link based on data-page on <body> ──
+  // Set active nav link based on data-page on <body> 
   const currentPage = document.body.dataset.page || '';
   document.querySelectorAll('.nav-link[data-nav]').forEach(link => {
     if (link.dataset.nav === currentPage) link.classList.add('active');
   });
 
-  // ── Mobile menu toggle ──
+  // Mobile menu toggle 
   const hamburger    = document.getElementById('hamburger');
   const mobileMenu   = document.getElementById('mobileMenu');
   const mobileClose  = document.getElementById('mobileClose');
@@ -270,7 +244,7 @@ const footerHTML = `
   mobileClose?.addEventListener('click', closeMenu);
   mobileOverlay?.addEventListener('click', closeMenu);
 
-  // ── Navbar scroll effect ──
+  // Navbar scroll effect 
   const navbar  = document.getElementById('navbar');
   const backTop = document.getElementById('backTop');
 
@@ -280,9 +254,19 @@ const footerHTML = `
     backTop?.classList.toggle('visible', y > 400);
   });
 
-  // ── Back to top ──
+  // Back to top 
   backTop?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  // Hash-based tour filter (tours.html#filter=wildlife etc.) 
+  if (window.location.hash.startsWith('#filter=')) {
+    const filterVal = window.location.hash.replace('#filter=', '');
+    // Wait for tours.js to initialise
+    setTimeout(() => {
+      const targetPill = document.querySelector(`.filter-pill[data-filter="${filterVal}"]`);
+      if (targetPill) targetPill.click();
+    }, 100);
+  }
 
 })();

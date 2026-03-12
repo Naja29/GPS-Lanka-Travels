@@ -13,7 +13,6 @@
 
   <title>GPS Lanka Travels | Create Unforgettable Travel Memories</title>
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="images/favicon.png"/>
 
   <!-- Font Awesome (icons) -->
@@ -26,13 +25,11 @@
   <link rel="stylesheet" href="css/home.css"/>
 </head>
 
-<!-- data-page="home" tells components.js which nav link to mark active -->
+
 <body data-page="home">
 
-  <!-- HEADER -->  
-   <div id="header-placeholder"></div>
+  <div id="header-placeholder"></div>
 
-  <!-- HERO — IMAGE SLIDER -->
   <section class="hero" id="home">
 
     <div class="hero-slides">
@@ -91,8 +88,6 @@
 
   </section>
 
-
-  <!-- WELCOME / ABOUT -->
   <section class="welcome section-pad" id="about">
     <div class="container">
       <div class="welcome-grid">
@@ -147,8 +142,6 @@
     </div>
   </section>
 
-
-  <!-- WHAT WE OFFER -->
   <section class="offer section-pad" id="services">
     <div class="container">
       <div class="section-header">
@@ -192,7 +185,7 @@
   </section>
 
 
-  <!-- WHY CHOOSE US -->
+  <!-- WHY CHOOSE US-->
   <section class="why section-pad" id="why">
     <div class="container">
       <div class="section-header">
@@ -269,7 +262,6 @@
   </section>
 
 
-  <!-- TOUR PACKAGES -->
   <section class="tours section-pad" id="tours">
     <div class="container">
       <div class="section-header">
@@ -570,6 +562,100 @@
   </section>
 
 
+  <!-- PARTNERS & TRUSTED PLATFORMS -->
+  <section class="partners-section">
+    <div class="container">
+      <div class="partners-header reveal">
+        <div class="section-tag" style="justify-content:center;">Trusted By</div>
+        <h2 class="section-title" style="text-align:center;">Our <em>Partners & Platforms</em></h2>
+        <p class="section-subtitle" style="text-align:center;">Recognized and rated across the world's leading travel platforms</p>
+      </div>
+    </div>
+
+    <!-- Marquee track -->
+    <div class="partners-marquee-wrap reveal">
+      <div class="partners-marquee" id="partnersMarquee">
+        <!-- Track duplicated in JS for infinite loop -->
+        <div class="partners-track" id="partnersTrack">
+
+          <div class="partner-item">
+            <i class="fab fa-google partner-icon" style="color:#4285F4;"></i>
+            <div class="partner-name">Google</div>
+            <div class="partner-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <div class="partner-label">5.0 Rating</div>
+          </div>
+
+          <div class="partner-divider"></div>
+
+          <div class="partner-item">
+            <i class="fab fa-tripadvisor partner-icon" style="color:#34E0A1;"></i>
+            <div class="partner-name">TripAdvisor</div>
+            <div class="partner-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <div class="partner-label">Top Rated</div>
+          </div>
+
+          <div class="partner-divider"></div>
+
+          <div class="partner-item">
+            <i class="fas fa-hotel partner-icon" style="color:#003580;"></i>
+            <div class="partner-name">Booking.com</div>
+            <div class="partner-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <div class="partner-label">Excellence Award</div>
+          </div>
+
+          <div class="partner-divider"></div>
+
+          <div class="partner-item">
+            <i class="fab fa-facebook partner-icon" style="color:#1877F2;"></i>
+            <div class="partner-name">Facebook</div>
+            <div class="partner-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <div class="partner-label">5.0 Reviews</div>
+          </div>
+
+          <div class="partner-divider"></div>
+
+          <div class="partner-item">
+            <i class="fas fa-globe partner-icon" style="color:var(--teal);"></i>
+            <div class="partner-name">Sri Lanka Tourism</div>
+            <div class="partner-stars"><i class="fas fa-certificate" style="color:var(--gold);font-size:13px;"></i></div>
+            <div class="partner-label">Licensed Operator</div>
+          </div>
+
+          <div class="partner-divider"></div>
+
+          <div class="partner-item">
+            <i class="fas fa-plane partner-icon" style="color:#FF6600;"></i>
+            <div class="partner-name">SriLankan Airlines</div>
+            <div class="partner-stars"><i class="fas fa-handshake" style="color:var(--gold);font-size:13px;"></i></div>
+            <div class="partner-label">Travel Partner</div>
+          </div>
+
+          <div class="partner-divider"></div>
+
+          <div class="partner-item">
+            <i class="fas fa-leaf partner-icon" style="color:#27ae60;"></i>
+            <div class="partner-name">Eco Tourism</div>
+            <div class="partner-stars"><i class="fas fa-certificate" style="color:var(--gold);font-size:13px;"></i></div>
+            <div class="partner-label">Certified</div>
+          </div>
+
+          <div class="partner-divider"></div>
+
+          <div class="partner-item">
+            <i class="fas fa-shield-alt partner-icon" style="color:#8e44ad;"></i>
+            <div class="partner-name">Travel Safe</div>
+            <div class="partner-stars"><i class="fas fa-check-circle" style="color:#27ae60;font-size:13px;"></i></div>
+            <div class="partner-label">Verified & Safe</div>
+          </div>
+
+          <div class="partner-divider"></div>
+
+        </div><!-- /.partners-track -->
+      </div>
+    </div>
+  </section>
+
+
   <!-- SCENIC PARALLAX BANNER -->
   <div class="scenic-banner">
     <div class="scenic-banner-text reveal">
@@ -578,11 +664,10 @@
   </div>
 
 
-  <!-- FOOTER -->
+  <!-- FOOTER  -->
   <div id="footer-placeholder"></div>
 
-
-  <!-- JAVASCRIPT -->
+  
   <script src="js/components.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/slider.js"></script>
