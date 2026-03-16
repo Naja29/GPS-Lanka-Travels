@@ -15,6 +15,7 @@ $menu = [
     ['page'=>'slider',       'icon'=>'fas fa-film',           'label'=>'Homepage Slider'],
     ['page'=>'why-us',       'icon'=>'fas fa-award',          'label'=>'Why Choose Us'],
     ['page'=>'settings',     'icon'=>'fas fa-cog',            'label'=>'Settings'],
+    ['page'=>'purge-cache',  'icon'=>'fas fa-fire-alt',       'label'=>'Purge Cache'],
 ];
 
 // Count unread enquiries for badge
@@ -29,9 +30,19 @@ if (isset($conn)) {
 
     <!-- Logo -->
     <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">
-            <i class="fas fa-compass"></i>
-        </div>
+        <?php if (file_exists(__DIR__ . '/../../images/logo.png')): ?>
+            <img src="<?= defined('SITE_URL') ? SITE_URL : '..' ?>/images/logo.png"
+                 alt="GPS Lanka Travels"
+                 class="sidebar-logo-img"
+                 onerror="this.style.display='none';document.getElementById('sidebarLogoFallback').style.display='flex';">
+            <div class="sidebar-logo-icon" id="sidebarLogoFallback" style="display:none;">
+                <i class="fas fa-compass"></i>
+            </div>
+        <?php else: ?>
+            <div class="sidebar-logo-icon" id="sidebarLogoFallback">
+                <i class="fas fa-compass"></i>
+            </div>
+        <?php endif; ?>
         <div class="sidebar-logo-text">
             <div class="sidebar-brand">GPS Lanka</div>
             <div class="sidebar-sub">Admin Panel</div>

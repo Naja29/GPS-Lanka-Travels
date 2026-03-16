@@ -67,7 +67,8 @@ $activePage = 'dashboard';
 
       <div class="welcome-banner">
         <div class="welcome-text">
-          <h2>Good <?= (date('H')<12 ? 'Morning' : (date('H')<17 ? 'Afternoon' : 'Evening')) ?>, <?= htmlspecialchars(adminName()) ?>! 👋</h2>
+          <?php $lkHour = (int)(new DateTime('now', new DateTimeZone('Asia/Colombo')))->format('H'); ?>
+          <h2>Good <?= ($lkHour < 12 ? 'Morning' : ($lkHour < 17 ? 'Afternoon' : 'Evening')) ?>, <?= htmlspecialchars(adminName()) ?>! 👋</h2>
           <p>Here's what's happening with GPS Lanka Travels today.</p>
         </div>
         <div class="welcome-icon"><i class="fas fa-compass"></i></div>
@@ -117,10 +118,12 @@ $activePage = 'dashboard';
                 <td><?= htmlspecialchars($enq['tour_type'] ?: '—') ?></td>
                 <td><?= timeAgo($enq['created_at']) ?></td>
                 <td>
-                  <?php if (!$enq['is_read']): ?>
+                  <?php if ($enq['status'] === 'new'): ?>
                     <span class="badge badge-unread"><i class="fas fa-circle" style="font-size:7px;"></i> New</span>
-                  <?php elseif ($enq['is_replied']): ?>
+                  <?php elseif ($enq['status'] === 'replied'): ?>
                     <span class="badge badge-replied">Replied</span>
+                  <?php elseif ($enq['status'] === 'closed'): ?>
+                    <span class="badge badge-inactive">Closed</span>
                   <?php else: ?>
                     <span class="badge badge-pending">Read</span>
                   <?php endif; ?>

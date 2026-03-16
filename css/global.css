@@ -194,6 +194,44 @@ ul { list-style: none; }
 .whatsapp-btn:hover { transform: scale(1.12); }
 .whatsapp-btn i     { color: var(--white); font-size: 28px; }
 
+/* WHATSAPP FLOATING BUTTON (float-wa) */
+.float-wa {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  z-index: 999;
+  width: 56px;
+  height: 56px;
+  background: #25d366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 28px rgba(37,211,102,0.45);
+  animation: waPulse 2.5s infinite;
+  transition: transform 0.3s;
+  text-decoration: none;
+}
+.float-wa:hover { transform: scale(1.1); }
+.float-wa i { color: #fff; font-size: 26px; }
+.float-wa-tooltip {
+  position: absolute;
+  right: 68px;
+  bottom: 50%;
+  transform: translateY(50%);
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 5px 12px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.float-wa:hover .float-wa-tooltip { opacity: 1; }
+
 /* BACK TO TOP */
 .back-top {
   position: fixed;

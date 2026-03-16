@@ -8,7 +8,7 @@ define('DB_NAME',   'gps_lanka_db');
 define('SITE_URL',  'http://localhost:8080/gps-lanka');
 define('ADMIN_URL', 'http://localhost:8080/gps-lanka/admin');
 
-/* ── MySQLi connection ($conn) ── */
+/* MySQLi connection ($conn) */
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, (int)DB_PORT);
 if ($conn->connect_error) {
     die('<div style="font-family:sans-serif;background:#fff0f0;border:2px solid #e74c3c;padding:28px;margin:40px auto;max-width:600px;border-radius:12px;">
@@ -69,7 +69,7 @@ function sanitizeFilename($name) {
 function uploadImage($file, $folder = 'uploads') {
     $allowed = ['image/jpeg','image/jpg','image/png','image/webp','image/gif'];
     if (!in_array($file['type'], $allowed)) return ['ok'=>false,'msg'=>'Only JPG, PNG, WebP, GIF allowed.'];
-    if ($file['size'] > 5 * 1024 * 1024)   return ['ok'=>false,'msg'=>'Max file size is 5 MB.'];
+    if ($file['size'] > 25 * 1024 * 1024)  return ['ok'=>false,'msg'=>'Max file size is 25 MB.'];
     $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $filename = uniqid('img_') . '.' . $ext;
     $dir      = __DIR__ . '/../' . $folder . '/';

@@ -19,12 +19,14 @@ INSERT IGNORE INTO `admin_users` (`username`,`password`,`full_name`,`email`,`rol
 
 -- Tour Categories
 CREATE TABLE IF NOT EXISTS `tour_categories` (
-  `id`         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `name`       VARCHAR(100) NOT NULL,
-  `slug`       VARCHAR(120) NOT NULL UNIQUE,
-  `icon`       VARCHAR(80)  DEFAULT 'fas fa-map',
-  `sort_order` TINYINT UNSIGNED DEFAULT 0,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+  `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `name`        VARCHAR(100) NOT NULL,
+  `slug`        VARCHAR(120) NOT NULL UNIQUE,
+  `icon`        VARCHAR(80)  DEFAULT 'fas fa-map',
+  `description` TEXT DEFAULT NULL,
+  `image`       VARCHAR(300) DEFAULT NULL,
+  `sort_order`  TINYINT UNSIGNED DEFAULT 0,
+  `created_at`  DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

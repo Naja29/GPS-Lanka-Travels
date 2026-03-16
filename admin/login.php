@@ -5,6 +5,15 @@ require_once 'includes/db.php';
 
 $error = ''; $timeout = isset($_GET['timeout']);
 
+/* Fetch site logo from settings  */
+$siteLogo = '';
+try {
+    $logoRow = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='site_logo' LIMIT 1");
+    if ($logoRow && $r = $logoRow->fetch_assoc()) { $siteLogo = $r['setting_value']; }
+} catch (Exception $e) { /* table may not exist yet */ }
+// Fallback to default images/logo.png
+if (!$siteLogo && file_exists(__DIR__ . '/../images/logo.png')) { $siteLogo = 'images/logo.png'; }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -44,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--teal-dark:#0a3d3d;--teal:#0f5252;--teal-light:#1a7575;--gold:#c9a84c;--gold-light:#e2c97e;--white:#fff;--off-white:#f8f6f0}
-    html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;display:flex}
-    .login-visual{flex:1.1;position:relative;overflow:hidden;background:url('../images/hero-slide-1.jpg') center/cover no-repeat}
+    html,body{height:100%;width:100%;overflow:hidden;font-family:'DM Sans',sans-serif;display:flex;margin:0;padding:0}
+    .login-visual{flex:1;position:relative;overflow:hidden;background:url('../images/hero-slide-1.jpg') center/cover no-repeat;min-height:100vh;}
     .login-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(145deg,rgba(10,61,61,.88) 0%,rgba(10,61,61,.6) 40%,rgba(0,0,0,.65) 100%);z-index:1}
     .login-visual::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 80%,rgba(201,168,76,.12) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(201,168,76,.08) 0%,transparent 50%);z-index:2}
     .visual-inner{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:48px}
@@ -73,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .particle{position:absolute;width:3px;height:3px;background:rgba(201,168,76,.4);border-radius:50%;animation:float linear infinite}
     @keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:.6}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
     /* FORM SIDE */
-    .login-form-side{width:480px;flex-shrink:0;background:#fff;display:flex;flex-direction:column;justify-content:center;padding:60px 52px;position:relative;overflow-y:auto}
+    .login-form-side{width:480px;flex-shrink:0;background:#fff;display:flex;flex-direction:column;justify-content:center;padding:60px 52px;position:relative;overflow-y:auto;min-height:100vh;height:100vh;}
     .login-form-side::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--teal-dark),var(--gold),var(--teal-light))}
     .form-header{margin-bottom:32px;animation:fadeUp .7s .2s both}
     .form-tag{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
@@ -131,7 +140,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="visual-inner">
       <div class="v-logo">
-        <div class="v-logo-icon"><i class="fas fa-compass"></i></div>
+        <?php if ($siteLogo): ?>
+          <img src="../<?= htmlspecialchars($siteLogo) ?>" alt="GPS Lanka Travels" style="height:52px;max-width:180px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,.3))"/>
+        <?php else: ?>
+          <div class="v-logo-icon"><i class="fas fa-compass"></i></div>
+        <?php endif; ?>
         <div><div class="v-brand">GPS Lanka Travels</div><div class="v-tagline">Admin Portal</div></div>
       </div>
       <div class="v-text">
