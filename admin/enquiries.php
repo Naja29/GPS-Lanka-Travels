@@ -74,7 +74,7 @@ $unread = (int)($conn->query("SELECT COUNT(*) as c FROM enquiries WHERE is_read=
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Enquiries | GPS Lanka Admin</title>
+<title>Messages | GPS Lanka Admin</title>
 <link rel="icon" type="image/png" href="../images/favicon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -117,7 +117,7 @@ $unread = (int)($conn->query("SELECT COUNT(*) as c FROM enquiries WHERE is_read=
 .info-item{background:var(--off-white);border-radius:10px;padding:14px 16px}
 .info-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-light);margin-bottom:4px}
 .info-value{font-size:14px;font-weight:600;color:var(--text-dark)}
-.message-box{background:var(--off-white);border-radius:10px;padding:16px 18px;line-height:1.7;font-size:13.5px;color:var(--text-mid);white-space:pre-line}
+.message-box{background:var(--off-white);border-radius:10px;padding:16px 18px;line-height:1.7;font-size:13.5px;color:var(--text-mid);white-space:pre-line;word-break:break-word;overflow-wrap:break-word}
 .nav-enqs{display:flex;gap:8px}
 .form-control{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text-dark);background:#fff;outline:none;transition:border-color .2s}
 .form-control:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,82,82,.07)}
@@ -142,12 +142,12 @@ textarea.form-control{resize:vertical;min-height:100px}
       <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
       <div>
         <div class="topbar-title">
-          Enquiries &amp; Bookings
+          Messages
           <?php if ($unread > 0): ?>
             <span style="display:inline-flex;align-items:center;justify-content:center;background:var(--blue);color:#fff;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;margin-left:6px;vertical-align:middle"><?= $unread ?></span>
           <?php endif; ?>
         </div>
-        <div class="topbar-breadcrumb"><?= $viewId ? 'Enquiries / View' : 'Enquiries' ?></div>
+        <div class="topbar-breadcrumb"><?= $viewId ? 'Messages / View' : 'Messages' ?></div>
       </div>
     </div>
     <div class="topbar-right">
@@ -177,14 +177,14 @@ textarea.form-control{resize:vertical;min-height:100px}
   <div class="admin-content">
     <div class="admin-content-inner">
 
-      <?php if ($msg === 'updated'): ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Enquiry updated.</div><?php endif; ?>
-      <?php if ($msg === 'deleted'): ?><div class="alert alert-warning"><i class="fas fa-trash"></i> Enquiry deleted.</div><?php endif; ?>
+      <?php if ($msg === 'updated'): ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Message updated.</div><?php endif; ?>
+      <?php if ($msg === 'deleted'): ?><div class="alert alert-warning"><i class="fas fa-trash"></i> Message deleted.</div><?php endif; ?>
 
       <?php if ($viewId && $enquiry): ?>
       <!-- ============ DETAIL VIEW ============ -->
       <div class="page-header">
         <div class="page-header-left">
-          <h1>Enquiry #<?= $enquiry['id'] ?></h1>
+          <h1>Message #<?= $enquiry['id'] ?></h1>
           <p>Received <?= timeAgo($enquiry['created_at']) ?> &mdash; <?= date('d M Y, H:i', strtotime($enquiry['created_at'])) ?></p>
         </div>
         <div class="page-header-actions">
@@ -266,17 +266,27 @@ textarea.form-control{resize:vertical;min-height:100px}
             </div>
           </div>
 
-          <!-- Quick Reply hint -->
-          <div style="margin-top:16px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;display:flex;align-items:center;gap:14px">
-            <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="fas fa-envelope" style="color:var(--teal);font-size:16px"></i>
-            </div>
-            <div>
-              <div style="font-weight:600;font-size:13.5px;margin-bottom:2px">Reply via Email</div>
+          <!-- Quick Reply -->
+          <div style="margin-top:16px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;">
+            <div style="font-weight:600;font-size:13.5px;margin-bottom:14px;color:var(--text-dark)"><i class="fas fa-reply" style="color:var(--teal);margin-right:6px"></i>Quick Reply</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
               <a href="mailto:<?= htmlspecialchars($enquiry['email']) ?>?subject=Re: <?= urlencode('Your enquiry - ' . ($enquiry['tour_type'] ?: 'GPS Lanka Travels')) ?>"
-                 class="btn btn-primary btn-sm" style="margin-top:4px">
-                <i class="fas fa-reply"></i> Reply to <?= htmlspecialchars($enquiry['name']) ?>
+                 class="btn btn-primary btn-sm">
+                <i class="fas fa-envelope"></i> Reply via Email
               </a>
+              <?php
+                $waPhone = preg_replace('/\D/', '', $enquiry['phone'] ?? $enquiry['whatsapp'] ?? '');
+                if ($waPhone && strlen($waPhone) >= 7):
+                  // Ensure country code — if starts with 0, replace with 94 (Sri Lanka)
+                  if ($waPhone[0] === '0') $waPhone = '94' . substr($waPhone, 1);
+                  $waText = urlencode('Hi ' . ($enquiry['name'] ?: '') . ', thank you for your enquiry' . ($enquiry['tour_type'] ? ' about ' . $enquiry['tour_type'] : '') . '. We would love to help you plan your Sri Lanka trip!');
+              ?>
+              <a href="https://wa.me/<?= $waPhone ?>?text=<?= $waText ?>"
+                 target="_blank"
+                 class="btn btn-sm" style="background:#25D366;color:#fff;">
+                <i class="fab fa-whatsapp"></i> Reply via WhatsApp
+              </a>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -309,12 +319,11 @@ textarea.form-control{resize:vertical;min-height:100px}
 
           <div class="detail-card">
             <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:14px;font-weight:700;color:var(--text-dark)">
-              <i class="fas fa-info-circle" style="color:var(--teal);margin-right:6px"></i> Enquiry Info
+              <i class="fas fa-info-circle" style="color:var(--teal);margin-right:6px"></i> Message Info
             </div>
             <div style="padding:16px 20px;display:flex;flex-direction:column;gap:10px;font-size:13px">
               <div style="display:flex;justify-content:space-between"><span style="color:var(--text-light)">ID</span><span style="font-weight:600">#<?= $enquiry['id'] ?></span></div>
-              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-light)">Received</span><span style="font-weight:600"><?= timeAgo($enquiry['created_at']) ?></span></div>
-              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-light)">Date</span><span style="font-weight:600"><?= date('d M Y', strtotime($enquiry['created_at'])) ?></span></div>
+              <div style="display:flex;justify-content:space-between;gap:12px"><span style="color:var(--text-light);flex-shrink:0">Received</span><span style="font-weight:600;text-align:right"><?= date('d M Y', strtotime($enquiry['created_at'])) ?><br><span style="font-size:12px;color:var(--text-mid)"><?= date('H:i', strtotime($enquiry['created_at'])) ?> (<?= timeAgo($enquiry['created_at']) ?>)</span></span></div>
               <div style="display:flex;justify-content:space-between"><span style="color:var(--text-light)">Read</span><span><?= $enquiry['is_read'] ? '<span style="color:var(--green)"><i class="fas fa-check"></i> Yes</span>' : '<span style="color:var(--text-light)">No</span>' ?></span></div>
             </div>
           </div>
@@ -326,7 +335,7 @@ textarea.form-control{resize:vertical;min-height:100px}
       <!-- ============ LIST VIEW ============ -->
       <div class="page-header">
         <div class="page-header-left">
-          <h1>Enquiries &amp; Bookings</h1>
+          <h1>Messages</h1>
           <p><?= $counts['all'] ?> total &mdash; <?= $unread ?> unread</p>
         </div>
       </div>
@@ -411,7 +420,7 @@ textarea.form-control{resize:vertical;min-height:100px}
 <div id="deleteModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:16px;padding:32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)">
     <div style="width:56px;height:56px;background:var(--red-pale);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:22px;color:var(--red)"><i class="fas fa-trash"></i></div>
-    <h3 style="margin-bottom:8px;color:var(--text-dark)">Delete Enquiry?</h3>
+    <h3 style="margin-bottom:8px;color:var(--text-dark)">Delete Message?</h3>
     <p id="delModalText" style="color:var(--text-light);font-size:13.5px;margin-bottom:24px;line-height:1.6"></p>
     <div style="display:flex;gap:10px;justify-content:center">
       <button onclick="document.getElementById('deleteModal').style.display='none'" class="btn btn-outline">Cancel</button>

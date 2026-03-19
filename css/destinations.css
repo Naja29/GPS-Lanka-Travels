@@ -317,7 +317,8 @@
 }
 .dest-detail-hero-bg {
   position: absolute; inset: 0;
-  background: url('../images/dest-arugam.jpg') center / cover no-repeat;
+  background: var(--dest-hero-bg, url('../images/dest-arugam.jpg')) center / cover no-repeat;
+  background-size: cover;
   transform: scale(1.04); transition: transform 8s ease;
 }
 .dest-detail-hero:hover .dest-detail-hero-bg { transform: scale(1.0); }
@@ -430,6 +431,17 @@
 .dest-info-table td:first-child i { color: var(--gold); font-size: 13px; flex-shrink: 0; }
 .dest-info-table td:last-child { color: var(--text-mid); line-height: 1.65; }
 
+/* Article lead / excerpt styled box */
+.article-lead {
+  border-left: 4px solid var(--gold) !important;
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(15,82,82,0.03)) !important;
+}
+.article-lead p {
+  font-size: 16.5px !important;
+  color: var(--teal-dark) !important;
+  line-height: 1.95; font-weight: 400 !important;
+}
+
 /* Book tour button */
 .article-book-btn {
   display: flex; justify-content: center; margin-top: 8px;
@@ -512,4 +524,14 @@
   .article-img-grid    { grid-template-columns: 1fr; }
   .dest-detail-hero    { height: 420px; }
   .dest-cta-btns       { flex-direction: column; align-items: center; }
+  .article-section     { padding: 24px; }
+}
+@media (max-width: 480px) {
+  .page-hero           { height: 300px; }
+  .dest-featured-img   { height: 220px; }
+  .dest-featured-body  { padding: 28px 22px; }
+  .article-img-full img{ height: 200px; }
+  .dest-detail-hero    { height: 340px; }
+  .article-section     { padding: 18px 16px; }
+  .trends-quote        { padding: 28px 24px; }
 }

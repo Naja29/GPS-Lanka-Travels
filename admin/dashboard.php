@@ -5,21 +5,24 @@ require_once 'includes/auth.php';
 
 $stats = [];
 $tableMap = [
-    'tours'        => ['label'=>'Tours',        'icon'=>'fas fa-map-marked-alt','color'=>'teal'],
-    'enquiries'    => ['label'=>'Enquiries',     'icon'=>'fas fa-envelope',      'color'=>'blue'],
-    'gallery'      => ['label'=>'Gallery',       'icon'=>'fas fa-images',        'color'=>'gold'],
-    'testimonials' => ['label'=>'Testimonials',  'icon'=>'fas fa-star',          'color'=>'orange'],
-    'blog_posts'   => ['label'=>'Blog Posts',    'icon'=>'fas fa-pen-nib',       'color'=>'green'],
-    'partners'     => ['label'=>'Partners',      'icon'=>'fas fa-handshake',     'color'=>'red'],
+    'bookings'     => ['label'=>'Tour Bookings', 'icon'=>'fas fa-calendar-check','color'=>'teal',   'link'=>'bookings.php'],
+    'enquiries'    => ['label'=>'Messages',      'icon'=>'fas fa-envelope',       'color'=>'blue',   'link'=>'enquiries.php'],
+    'tours'        => ['label'=>'Tours',         'icon'=>'fas fa-map-marked-alt', 'color'=>'gold',   'link'=>'tours.php'],
+    'blog_posts'   => ['label'=>'Blog Posts',    'icon'=>'fas fa-pen-nib',        'color'=>'green',  'link'=>'blog.php'],
+    'gallery'      => ['label'=>'Gallery',       'icon'=>'fas fa-images',         'color'=>'orange', 'link'=>'gallery.php'],
+    'testimonials' => ['label'=>'Testimonials',  'icon'=>'fas fa-star',           'color'=>'red',    'link'=>'testimonials.php'],
 ];
 foreach ($tableMap as $tbl => $info) {
     $r = $conn->query("SELECT COUNT(*) as cnt FROM `$tbl`");
-    $stats[$tbl] = array_merge($info, ['count' => $r ? $r->fetch_assoc()['cnt'] : 0]);
+    $stats[$tbl] = array_merge($info, ['count' => $r ? ($r->fetch_assoc()['cnt'] ?? 0) : 0]);
 }
-$unreadRes = $conn->query("SELECT COUNT(*) as cnt FROM enquiries WHERE is_read = 0");
-$unread    = $unreadRes ? $unreadRes->fetch_assoc()['cnt'] : 0;
-$recentEnq  = $conn->query("SELECT * FROM enquiries ORDER BY created_at DESC LIMIT 8");
-$recentBlog = $conn->query("SELECT bp.*, bc.name as cat_name FROM blog_posts bp LEFT JOIN blog_categories bc ON bp.category_id = bc.id ORDER BY bp.created_at DESC LIMIT 5");
+$unreadRes    = $conn->query("SELECT COUNT(*) as cnt FROM enquiries WHERE is_read = 0");
+$unread       = $unreadRes ? $unreadRes->fetch_assoc()['cnt'] : 0;
+$unreadBkRes  = $conn->query("SELECT COUNT(*) as cnt FROM bookings WHERE is_read = 0");
+$unreadBk     = $unreadBkRes ? $unreadBkRes->fetch_assoc()['cnt'] : 0;
+$recentEnq    = $conn->query("SELECT * FROM enquiries ORDER BY created_at DESC LIMIT 6");
+$recentBk     = $conn->query("SELECT * FROM bookings ORDER BY created_at DESC LIMIT 6");
+$recentBlog   = $conn->query("SELECT bp.*, bc.name as cat_name FROM blog_posts bp LEFT JOIN blog_categories bc ON bp.category_id = bc.id ORDER BY bp.created_at DESC LIMIT 5");
 $activePage = 'dashboard';
 ?>
 <!DOCTYPE html>
@@ -76,13 +79,15 @@ $activePage = 'dashboard';
 
       <div class="stats-grid">
         <?php foreach ($stats as $key => $s): ?>
-        <a href="<?= str_replace('_','-',$key) ?>.php" class="stat-card">
+        <a href="<?= $s['link'] ?>" class="stat-card">
           <div class="stat-icon <?= $s['color'] ?>"><i class="<?= $s['icon'] ?>"></i></div>
           <div>
             <div class="stat-num"><?= number_format($s['count']) ?></div>
             <div class="stat-label"><?= $s['label'] ?>
               <?php if ($key==='enquiries' && $unread>0): ?>
                 <span class="badge badge-unread" style="margin-left:6px;"><?= $unread ?> new</span>
+              <?php elseif ($key==='bookings' && $unreadBk>0): ?>
+                <span class="badge badge-unread" style="margin-left:6px;"><?= $unreadBk ?> new</span>
               <?php endif; ?>
             </div>
           </div>
@@ -92,7 +97,8 @@ $activePage = 'dashboard';
 
       <div class="quick-actions">
         <a href="tours.php?action=add"     class="quick-action-btn"><i class="fas fa-plus-circle"></i><span>Add Tour</span></a>
-        <a href="enquiries.php"            class="quick-action-btn"><i class="fas fa-envelope-open"></i><span>View Enquiries</span></a>
+        <a href="bookings.php"             class="quick-action-btn"><i class="fas fa-calendar-check"></i><span>View Bookings</span></a>
+        <a href="enquiries.php"            class="quick-action-btn"><i class="fas fa-envelope-open"></i><span>View Messages</span></a>
         <a href="gallery.php"              class="quick-action-btn"><i class="fas fa-cloud-upload-alt"></i><span>Upload Photos</span></a>
         <a href="blog.php?action=add"      class="quick-action-btn"><i class="fas fa-pen-nib"></i><span>Write Blog Post</span></a>
         <a href="slider.php"               class="quick-action-btn"><i class="fas fa-film"></i><span>Manage Slider</span></a>
@@ -102,11 +108,55 @@ $activePage = 'dashboard';
       <div class="dash-grid">
 
         <div class="card">
-          <div class="card-header">
-            <span class="card-title"><i class="fas fa-envelope"></i> Recent Enquiries</span>
-            <a href="enquiries.php" class="btn btn-sm btn-outline">View All</a>
+          <div class="card-header" style="gap:12px;flex-wrap:wrap;">
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-primary" id="tabBtnBk" onclick="switchTab('bk')">
+                <i class="fas fa-calendar-check"></i> Bookings <?php if($unreadBk>0): ?><span class="badge badge-unread" style="margin-left:4px;"><?= $unreadBk ?></span><?php endif; ?>
+              </button>
+              <button class="btn btn-sm btn-outline" id="tabBtnEnq" onclick="switchTab('enq')">
+                <i class="fas fa-envelope"></i> Messages <?php if($unread>0): ?><span class="badge badge-unread" style="margin-left:4px;"><?= $unread ?></span><?php endif; ?>
+              </button>
+            </div>
+            <div style="display:flex;gap:6px;margin-left:auto;">
+              <a href="bookings.php"  id="tabLinkBk"  class="btn btn-sm btn-outline">View All</a>
+              <a href="enquiries.php" id="tabLinkEnq" class="btn btn-sm btn-outline" style="display:none;">View All</a>
+            </div>
           </div>
-          <div class="table-wrap">
+
+          <!-- Bookings tab -->
+          <div id="tabBk" class="table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Ref</th><th>Customer</th><th>Tour</th><th>Date</th><th>Status</th></tr></thead>
+              <tbody>
+              <?php if ($recentBk && $recentBk->num_rows > 0):
+                while ($bk = $recentBk->fetch_assoc()): ?>
+              <tr>
+                <td><span style="font-weight:600;color:var(--teal);font-size:12px;">BK-<?= str_pad($bk['id'],5,'0',STR_PAD_LEFT) ?></span></td>
+                <td><div class="col-title"><?= htmlspecialchars($bk['name']) ?></div>
+                    <div class="text-muted text-sm"><?= htmlspecialchars($bk['email']) ?></div></td>
+                <td><?= htmlspecialchars(mb_strimwidth($bk['tour_title'],0,30,'…')) ?></td>
+                <td><?= $bk['tour_date'] ? date('d M Y', strtotime($bk['tour_date'])) : '—' ?></td>
+                <td>
+                  <?php if ($bk['status'] === 'new'): ?>
+                    <span class="badge badge-unread"><i class="fas fa-circle" style="font-size:7px;"></i> New</span>
+                  <?php elseif ($bk['status'] === 'confirmed'): ?>
+                    <span class="badge badge-replied">Confirmed</span>
+                  <?php elseif ($bk['status'] === 'cancelled'): ?>
+                    <span class="badge badge-inactive">Cancelled</span>
+                  <?php else: ?>
+                    <span class="badge badge-pending"><?= htmlspecialchars($bk['status']) ?></span>
+                  <?php endif; ?>
+                </td>
+              </tr>
+              <?php endwhile; else: ?>
+              <tr><td colspan="5"><div class="empty-state" style="padding:30px;"><i class="fas fa-calendar-check"></i><p>No bookings yet</p></div></td></tr>
+              <?php endif; ?>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Messages tab -->
+          <div id="tabEnq" class="table-wrap" style="display:none;">
             <table class="admin-table">
               <thead><tr><th>Name</th><th>Tour Type</th><th>Received</th><th>Status</th></tr></thead>
               <tbody>
@@ -130,7 +180,7 @@ $activePage = 'dashboard';
                 </td>
               </tr>
               <?php endwhile; else: ?>
-              <tr><td colspan="4"><div class="empty-state" style="padding:30px;"><i class="fas fa-inbox"></i><p>No enquiries yet</p></div></td></tr>
+              <tr><td colspan="4"><div class="empty-state" style="padding:30px;"><i class="fas fa-inbox"></i><p>No messages yet</p></div></td></tr>
               <?php endif; ?>
               </tbody>
             </table>
@@ -182,5 +232,16 @@ $activePage = 'dashboard';
 </div>
 </div>
 <script src="js/admin.js"></script>
+<script>
+function switchTab(tab) {
+  const isBk = tab === 'bk';
+  document.getElementById('tabBk').style.display    = isBk ? '' : 'none';
+  document.getElementById('tabEnq').style.display   = isBk ? 'none' : '';
+  document.getElementById('tabLinkBk').style.display  = isBk ? '' : 'none';
+  document.getElementById('tabLinkEnq').style.display = isBk ? 'none' : '';
+  document.getElementById('tabBtnBk').className  = 'btn btn-sm ' + (isBk ? 'btn-primary' : 'btn-outline');
+  document.getElementById('tabBtnEnq').className = 'btn btn-sm ' + (isBk ? 'btn-outline' : 'btn-primary');
+}
+</script>
 </body>
 </html>

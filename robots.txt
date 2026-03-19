@@ -1,0 +1,45 @@
+User-agent: *
+
+# Allow all main public pages
+Allow: /
+Allow: /index.php
+Allow: /tours.php
+Allow: /tour-detail.php
+Allow: /destinations.php
+Allow: /destination-detail.php
+Allow: /gallery.php
+Allow: /blog.php
+Allow: /blog-detail.php
+Allow: /about.php
+Allow: /contact.php
+Allow: /privacy.php
+Allow: /terms.php
+Allow: /sitemap.php
+
+# Allow CSS, JS, images for proper rendering
+Allow: /css/
+Allow: /js/
+Allow: /images/
+
+# Block admin panel from search engines
+Disallow: /admin/
+Disallow: /admin/login.php
+Disallow: /admin/dashboard.php
+
+# Block includes directory
+Disallow: /includes/
+
+# Block sensitive files
+Disallow: /*.sql$
+Disallow: /*.log$
+Disallow: /*.env$
+Disallow: /db_setup.sql
+
+# Block upload/admin paths
+Disallow: /admin/uploads/
+
+# Block maintenance page
+Disallow: /maintenance.php
+
+# XML Sitemap — update with your real domain before going live
+Sitemap: https://www.yourdomain.com/sitemap.xml

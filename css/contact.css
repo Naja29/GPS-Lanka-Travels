@@ -240,6 +240,12 @@
 .social-link-btn.ig i  { color: #E1306C; }
 .social-link-btn.wa i  { color: #25D366; }
 .social-link-btn.yt i  { color: #FF0000; }
+.social-link-btn.tk    { }  .social-link-btn.tk:hover    { border-color: #000; color: #000; }
+.social-link-btn.tw    { }  .social-link-btn.tw:hover    { border-color: #1DA1F2; color: #1DA1F2; }
+.social-link-btn.ta    { }  .social-link-btn.ta:hover    { border-color: #34E0A1; color: #34E0A1; }
+.social-link-btn.tk i  { color: #000; }
+.social-link-btn.tw i  { color: #1DA1F2; }
+.social-link-btn.ta i  { color: #34E0A1; }
 
 /* Business hours */
 .hours-list { display: flex; flex-direction: column; gap: 10px; }
@@ -311,4 +317,11 @@
   .contact-why-grid    { grid-template-columns: 1fr; }
   .form-submit-row     { flex-direction: column; align-items: flex-start; }
   .social-links-grid   { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 480px) {
+  .page-hero           { height: 300px; }
+  .contact-form-wrap   { padding: 22px 16px; }
+  .social-links-grid   { grid-template-columns: repeat(2, 1fr); }
+  .contact-info-card   { padding: 22px 18px; }
+  .contact-map iframe  { height: 280px; }
 }

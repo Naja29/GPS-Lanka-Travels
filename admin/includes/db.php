@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('Asia/Colombo');
+
 define('DB_HOST',   '127.0.0.1');
 define('DB_PORT',   '3307');
 define('DB_USER',   'root');
@@ -72,7 +74,7 @@ function uploadImage($file, $folder = 'uploads') {
     if ($file['size'] > 25 * 1024 * 1024)  return ['ok'=>false,'msg'=>'Max file size is 25 MB.'];
     $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $filename = uniqid('img_') . '.' . $ext;
-    $dir      = __DIR__ . '/../' . $folder . '/';
+    $dir      = __DIR__ . '/../../' . $folder . '/';
     if (!is_dir($dir)) mkdir($dir, 0755, true);
     if (!move_uploaded_file($file['tmp_name'], $dir . $filename)) return ['ok'=>false,'msg'=>'Upload failed.'];
     return ['ok'=>true,'path'=> $folder . '/' . $filename];

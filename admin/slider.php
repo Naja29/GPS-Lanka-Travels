@@ -131,8 +131,8 @@ $v = $editItem ?? [];
 .slide-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;display:grid;grid-template-columns:200px 1fr;transition:border-color .2s}
 .slide-card:hover{border-color:var(--teal)}
 .slide-card.inactive{opacity:.55}
-.slide-thumb{width:200px;height:130px;object-fit:cover;display:block}
-.slide-thumb-ph{width:200px;height:130px;background:var(--off-white);display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:32px}
+.slide-thumb{width:200px;height:100%;min-height:130px;object-fit:cover;display:block}
+.slide-thumb-ph{width:200px;min-height:130px;background:var(--off-white);display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:32px}
 .slide-info{padding:14px 18px;display:flex;flex-direction:column;gap:6px;justify-content:center}
 .slide-title{font-size:15px;font-weight:700;color:var(--text-dark);line-height:1.3}
 .slide-subtitle{font-size:12px;color:var(--text-mid);line-height:1.5}
@@ -200,8 +200,9 @@ $v = $editItem ?? [];
               <div class="fgrp">
                 <label>Slide Title <span style="color:var(--red)">*</span></label>
                 <input type="text" name="title" class="form-control" required
-                       placeholder="e.g. Discover Sri Lanka"
+                       placeholder="e.g. Discover *Sri Lanka*"
                        value="<?= htmlspecialchars($v['title'] ?? '') ?>"/>
+                <small style="font-size:11px;color:var(--text-light)">Wrap a word in <strong>*asterisks*</strong> to display it in gold italic — e.g. <em>Discover *Sri Lanka*</em></small>
               </div>
 
               <div class="fgrp">

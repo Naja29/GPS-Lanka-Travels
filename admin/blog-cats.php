@@ -3,7 +3,7 @@ session_start();
 require_once 'includes/db.php';
 require_once 'includes/auth.php';
 
-$activePage = 'blog-cats';
+$activePage = 'blog';
 $editCat    = null;
 $formError  = '';
 $msg        = $_GET['msg'] ?? '';
@@ -95,6 +95,10 @@ if ($r) while ($row = $r->fetch_assoc()) $cats[] = $row;
 .edit-mode .form-sec-head h3,.edit-mode .form-sec-head i{color:#a8782a}
 .color-swatch{width:18px;height:18px;border-radius:4px;display:inline-block;flex-shrink:0;border:1px solid rgba(0,0,0,.1)}
 @media(max-width:900px){.split-layout{grid-template-columns:1fr}}
+.page-tabs{display:flex;gap:2px;margin-bottom:22px;border-bottom:2px solid var(--border)}
+.page-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-mid);text-decoration:none;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;margin-bottom:-2px;display:inline-flex;align-items:center;gap:7px;transition:color .15s,background .15s}
+.page-tab:hover{color:var(--teal);background:var(--off-white)}
+.page-tab.active{color:var(--teal);background:#fff;border-color:var(--border);border-bottom-color:#fff}
 </style>
 </head>
 <body>
@@ -119,6 +123,11 @@ if ($r) while ($row = $r->fetch_assoc()) $cats[] = $row;
 
   <div class="admin-content">
     <div class="admin-content-inner">
+
+      <div class="page-tabs">
+        <a href="blog.php" class="page-tab"><i class="fas fa-pen-nib"></i> Posts</a>
+        <a href="blog-cats.php" class="page-tab active"><i class="fas fa-folder"></i> Categories</a>
+      </div>
 
       <?php if ($msg === 'added'):   ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Category added successfully.</div><?php endif; ?>
       <?php if ($msg === 'updated'): ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Category updated successfully.</div><?php endif; ?>

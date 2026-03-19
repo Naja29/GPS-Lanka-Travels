@@ -75,7 +75,7 @@ if (isset($_GET['delete'])) {
     $id  = (int)$_GET['delete'];
     $row = $conn->query("SELECT filename FROM gallery WHERE id=$id")->fetch_assoc();
     if ($row) {
-        $p = __DIR__ . '/../' . $row['filename'];
+        $p = __DIR__ . '/../../' . $row['filename'];
         if (file_exists($p)) unlink($p);
         $conn->query("DELETE FROM gallery WHERE id=$id");
     }
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_delete'])) {
         $id  = (int)$id;
         $row = $conn->query("SELECT filename FROM gallery WHERE id=$id")->fetch_assoc();
         if ($row) {
-            $p = __DIR__ . '/../' . $row['filename'];
+            $p = __DIR__ . '/../../' . $row['filename'];
             if (file_exists($p)) unlink($p);
             $conn->query("DELETE FROM gallery WHERE id=$id");
         }
@@ -271,8 +271,11 @@ if ($view === 'cats') {
         <button id="selectModeBtn" class="btn btn-outline btn-sm" onclick="toggleSelectMode()">
           <i class="fas fa-check-square"></i> Select
         </button>
+        <button id="selectAllBtn" class="btn btn-outline btn-sm" style="display:none" onclick="selectAll()">
+          <i class="fas fa-check-double"></i> Select All
+        </button>
         <button id="bulkDeleteBtn" class="btn btn-sm" style="background:var(--red);color:#fff;display:none" onclick="bulkDelete()">
-          <i class="fas fa-trash"></i> Delete Selected (<span id="selCount">0</span>)
+          <i class="fas fa-trash"></i> Delete (<span id="selCount">0</span>)
         </button>
       <?php else: ?>
         <a href="gallery.php" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Back to Gallery</a>
@@ -614,10 +617,20 @@ function toggleSelectMode() {
   document.getElementById('selectModeBtn').innerHTML = selMode
     ? '<i class="fas fa-times"></i> Cancel'
     : '<i class="fas fa-check-square"></i> Select';
+  document.getElementById('selectAllBtn').style.display = selMode ? '' : 'none';
   if (!selMode) {
     document.querySelectorAll('.sel-check').forEach(c => c.checked = false);
     updateSelCount();
   }
+}
+function selectAll() {
+  const checks = document.querySelectorAll('.sel-check');
+  const allChecked = [...checks].every(c => c.checked);
+  checks.forEach(c => c.checked = !allChecked);
+  document.getElementById('selectAllBtn').innerHTML = allChecked
+    ? '<i class="fas fa-check-double"></i> Select All'
+    : '<i class="fas fa-times-circle"></i> Deselect All';
+  updateSelCount();
 }
 function updateSelCount() {
   const n = document.querySelectorAll('.sel-check:checked').length;

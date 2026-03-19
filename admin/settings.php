@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             saveSetting($conn, 'site_name',    trim($_POST['site_name']    ?? ''));
             saveSetting($conn, 'site_tagline', trim($_POST['site_tagline'] ?? ''));
             saveSetting($conn, 'footer_about', trim($_POST['footer_about'] ?? ''));
-            saveSetting($conn, 'footer_text',  trim($_POST['footer_text']  ?? ''));
+            saveSetting($conn, 'footer_copyright', trim($_POST['footer_text'] ?? ''));
             $err = handleLogoUpload($conn, $s, 'site_logo',    'site_logo',    'images');
             if ($err) { $saveMsg = 'error:' . $err; break; }
             $err = handleLogoUpload($conn, $s, 'site_favicon', 'site_favicon', 'images');
@@ -84,6 +84,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'contact':
             foreach (['site_email','site_phone','site_whatsapp','site_address','business_hours','google_maps_embed'] as $k)
                 saveSetting($conn, $k, trim($_POST[$k] ?? ''));
+            // Save structured business hours
+            $hDays  = $_POST['hours_day']    ?? [];
+            $hTimes = $_POST['hours_time']   ?? [];
+            $hStats = $_POST['hours_status'] ?? [];
+            $hoursRows = [];
+            foreach ($hDays as $i => $day) {
+                $day = trim($day);
+                if ($day === '') continue;
+                $hoursRows[] = [
+                    'days'   => $day,
+                    'time'   => trim($hTimes[$i] ?? ''),
+                    'status' => in_array($hStats[$i] ?? '', ['open','closed','special']) ? $hStats[$i] : 'open',
+                ];
+            }
+            saveSetting($conn, 'business_hours_json', json_encode($hoursRows));
             break;
 
         case 'smtp':
@@ -239,7 +254,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           'social'      => ['icon'=>'fa-share-alt',     'label'=>'Social Media'],
           'security'    => ['icon'=>'fa-shield-alt',    'label'=>'Security'],
           'maintenance' => ['icon'=>'fa-tools',         'label'=>'Maintenance'],
-          'about'       => ['icon'=>'fa-info-circle',   'label'=>'Homepage About'],
         ];
         foreach ($tabs as $key => $t): ?>
           <a href="?tab=<?= $key ?>" class="<?= $activeTab === $key ? 'active' : '' ?>">
@@ -343,8 +357,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="fgrp">
               <label>Footer Copyright Text</label>
               <input type="text" name="footer_text" class="form-control"
-                     value="<?= sv($s,'footer_text') ?>"
-                     placeholder="&copy; All Rights Reserved | GPS Lanka Travels"/>
+                     value="<?= sv($s,'footer_copyright') ?>"
+                     placeholder="&copy; 2025 GPS Lanka Travels. All rights reserved."/>
               <span class="hint">You can use HTML entities like &amp;copy; for standard symbols.</span>
             </div>
           </div>
@@ -470,17 +484,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        value="<?= sv($s,'site_phone') ?>" placeholder="+94 77 048 9956"/>
               </div>
             </div>
-            <div class="frow c2">
-              <div class="fgrp">
-                <label>WhatsApp Number <span class="hint">Numbers only with country code</span></label>
-                <input type="text" name="site_whatsapp" class="form-control"
-                       value="<?= sv($s,'site_whatsapp') ?>" placeholder="94770489956"/>
-              </div>
-              <div class="fgrp">
-                <label>Business Hours</label>
-                <input type="text" name="business_hours" class="form-control"
-                       value="<?= sv($s,'business_hours') ?>" placeholder="Mon - Sun: 8:00 AM - 8:00 PM"/>
-              </div>
+            <div class="fgrp">
+              <label>WhatsApp Number <span class="hint">Numbers only with country code</span></label>
+              <input type="text" name="site_whatsapp" class="form-control"
+                     value="<?= sv($s,'site_whatsapp') ?>" placeholder="94770489956"/>
+            </div>
+            <div class="fgrp">
+              <label>Business Hours Summary <span class="hint">Short text shown in header/footer strip</span></label>
+              <input type="text" name="business_hours" class="form-control"
+                     value="<?= sv($s,'business_hours') ?>" placeholder="Mon - Sun: 8:00 AM - 8:00 PM"/>
             </div>
             <div class="fgrp">
               <label>Address</label>
@@ -492,6 +504,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <textarea name="google_maps_embed" class="form-control" rows="3"
                         placeholder="&lt;iframe src=&quot;https://www.google.com/maps/embed?...&quot;&gt;&lt;/iframe&gt;"><?= sv($s,'google_maps_embed') ?></textarea>
             </div>
+          </div>
+        </div>
+
+        <!-- BUSINESS HOURS EDITOR -->
+        <?php
+        $hoursJson = $s['business_hours_json'] ?? '';
+        $hoursRows = $hoursJson ? (json_decode($hoursJson, true) ?: []) : [];
+        if (!$hoursRows) $hoursRows = [
+            ['days'=>'Monday - Friday','time'=>'8:00 AM - 8:00 PM','status'=>'open'],
+            ['days'=>'Saturday',       'time'=>'8:00 AM - 8:00 PM','status'=>'open'],
+            ['days'=>'Sunday',         'time'=>'8:00 AM - 8:00 PM','status'=>'open'],
+            ['days'=>'Emergency Support','time'=>'24 / 7',         'status'=>'special'],
+        ];
+        ?>
+        <div class="settings-section">
+          <div class="settings-section-head">
+            <h2>Business Hours</h2>
+            <p>Displayed on the Contact page hours card. Add, edit or reorder rows.</p>
+          </div>
+          <div class="settings-section-body">
+            <div id="hoursRows">
+              <?php foreach ($hoursRows as $i => $hr): ?>
+              <div class="hours-editor-row" style="display:grid;grid-template-columns:1fr 1fr 140px 36px;gap:10px;align-items:center;margin-bottom:10px;">
+                <input type="text" name="hours_day[]" class="form-control" placeholder="e.g. Monday - Friday"
+                       value="<?= htmlspecialchars($hr['days']) ?>"/>
+                <input type="text" name="hours_time[]" class="form-control" placeholder="e.g. 8:00 AM - 8:00 PM"
+                       value="<?= htmlspecialchars($hr['time']) ?>"/>
+                <select name="hours_status[]" class="form-control">
+                  <option value="open"    <?= ($hr['status']==='open')    ?'selected':'' ?>>Open</option>
+                  <option value="closed"  <?= ($hr['status']==='closed')  ?'selected':'' ?>>Closed</option>
+                  <option value="special" <?= ($hr['status']==='special') ?'selected':'' ?>>Special</option>
+                </select>
+                <button type="button" onclick="this.closest('.hours-editor-row').remove()"
+                        style="width:36px;height:38px;border:none;border-radius:8px;background:var(--red-pale);color:var(--red);cursor:pointer;font-size:14px;">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <?php endforeach; ?>
+            </div>
+            <button type="button" onclick="addHoursRow()"
+                    style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1.5px dashed var(--border);border-radius:8px;background:var(--off-white);color:var(--text-mid);cursor:pointer;font-size:13px;font-weight:500;">
+              <i class="fas fa-plus"></i> Add Row
+            </button>
+            <p class="hint" style="margin-top:8px"><strong>Open</strong> = green badge · <strong>Closed</strong> = red badge · <strong>Special</strong> = gold highlight row (e.g. Emergency Support)</p>
           </div>
         </div>
 
@@ -761,83 +817,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </form>
 
-      <!-- ═══════════════════════════════════ ABOUT ═══ -->
-      <?php elseif ($activeTab === 'about'): ?>
-      <form method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="tab" value="about"/>
-
-        <div class="settings-section">
-          <div class="settings-section-head">
-            <h2>Homepage About Section</h2>
-            <p>Content displayed in the "About Us" section on the homepage</p>
-          </div>
-          <div class="settings-section-body">
-            <div class="frow c2">
-              <div class="fgrp">
-                <label>Section Title</label>
-                <input type="text" name="homepage_about_title" class="form-control"
-                       value="<?= sv($s,'homepage_about_title') ?>"
-                       placeholder="About GPS Lanka Travels"/>
-              </div>
-              <div class="fgrp">
-                <label>Subtitle / Tagline</label>
-                <input type="text" name="homepage_about_subtitle" class="form-control"
-                       value="<?= sv($s,'homepage_about_subtitle') ?>"
-                       placeholder="Your trusted travel partner in Sri Lanka"/>
-              </div>
-            </div>
-
-            <div class="fgrp">
-              <label>About Content</label>
-              <textarea name="homepage_about_content" class="form-control" rows="5"
-                        placeholder="Write about your company, mission and values…"><?= sv($s,'homepage_about_content') ?></textarea>
-            </div>
-
-            <div class="fgrp">
-              <label>Key Highlights <span class="hint">Short bullet points shown as badges or stats</span></label>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <input type="text" name="homepage_about_highlight1" class="form-control"
-                       value="<?= sv($s,'homepage_about_highlight1') ?>"
-                       placeholder="e.g. 500+ Happy Guests"/>
-                <input type="text" name="homepage_about_highlight2" class="form-control"
-                       value="<?= sv($s,'homepage_about_highlight2') ?>"
-                       placeholder="e.g. 10+ Years Experience"/>
-                <input type="text" name="homepage_about_highlight3" class="form-control"
-                       value="<?= sv($s,'homepage_about_highlight3') ?>"
-                       placeholder="e.g. 50+ Tour Packages"/>
-              </div>
-            </div>
-
-            <div class="fgrp">
-              <label>About Section Image</label>
-              <div class="logo-upload-row" style="align-items:flex-start">
-                <?php if (!empty($s['homepage_about_image'])): ?>
-                  <img src="<?= SITE_URL.'/'.$s['homepage_about_image'] ?>"
-                       style="width:100px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0"
-                       id="aboutImgPreview" alt="About"/>
-                <?php else: ?>
-                  <div class="logo-thumb-placeholder" id="aboutImgPreviewPh"
-                       style="width:100px;height:70px;border-radius:8px"><i class="fas fa-image"></i></div>
-                  <img src="" style="width:100px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0;display:none"
-                       id="aboutImgPreview" alt="About"/>
-                <?php endif; ?>
-                <div class="logo-upload-info">
-                  <input type="file" name="homepage_about_image" class="form-control" accept="image/*"
-                         onchange="previewImg(this,'aboutImgPreview','aboutImgPreviewPh')"/>
-                  <span>Recommended: 800×600px JPG or WebP.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="save-bar">
-          <span class="save-bar-hint">About content is shown on the homepage and About page.</span>
-          <button type="submit" class="btn btn-primary" style="padding:11px 32px">
-            <i class="fas fa-save"></i> Save Changes
-          </button>
-        </div>
-      </form>
       <?php endif; ?>
 
       </div><!-- end right content -->
@@ -878,6 +857,28 @@ const mt = document.getElementById('metaTitle');
 const md = document.getElementById('metaDesc');
 if (mt && mt.value) countChars(mt, 'metaTitleCount', 60);
 if (md && md.value)  countChars(md, 'metaDescCount',  160);
+
+/* Business hours row */
+function addHoursRow() {
+  const wrap = document.getElementById('hoursRows');
+  if (!wrap) return;
+  const div = document.createElement('div');
+  div.className = 'hours-editor-row';
+  div.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 140px 36px;gap:10px;align-items:center;margin-bottom:10px;';
+  div.innerHTML = `
+    <input type="text" name="hours_day[]" class="form-control" placeholder="e.g. Monday - Friday"/>
+    <input type="text" name="hours_time[]" class="form-control" placeholder="e.g. 8:00 AM - 8:00 PM"/>
+    <select name="hours_status[]" class="form-control">
+      <option value="open">Open</option>
+      <option value="closed">Closed</option>
+      <option value="special">Special</option>
+    </select>
+    <button type="button" onclick="this.closest('.hours-editor-row').remove()"
+            style="width:36px;height:38px;border:none;border-radius:8px;background:var(--red-pale);color:var(--red);cursor:pointer;font-size:14px;">
+      <i class="fas fa-times"></i>
+    </button>`;
+  wrap.appendChild(div);
+}
 
 /* Password strength */
 function checkStrength(pw) {

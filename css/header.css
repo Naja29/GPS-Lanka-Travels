@@ -1,6 +1,7 @@
 /* STICKY HEADER WRAPPER */
 /* Wraps both topbar + navbar so they stay fixed at the very top on scroll */
-#header-placeholder {
+#header-placeholder,
+.site-header {
   position: fixed;
   top: 0;
   left: 0;
@@ -58,7 +59,7 @@ body { padding-top: 109px; }
 
 /* NAVBAR */
 .navbar {
-  position: relative; /* parent #header-placeholder is fixed */
+  position: relative; /* parent .site-header / #header-placeholder is fixed */
   background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -274,4 +275,9 @@ body { padding-top: 109px; }
   .nav-links   { display: none; }
   .hamburger   { display: flex; }
   .mobile-menu { display: block; }
+}
+@media (max-width: 480px) {
+  .topbar  { display: none; }
+  body     { padding-top: 72px; }
+  .nav-inner { height: 64px; }
 }

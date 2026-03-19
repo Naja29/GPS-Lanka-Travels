@@ -175,6 +175,10 @@ $v = $editPost ?? [];
 .img-preview{width:100%;height:160px;object-fit:cover;border-radius:8px;margin-top:8px;display:block}
 .seo-box{background:linear-gradient(135deg,#f0f9f9,#fff);border:1px solid rgba(15,82,82,.12);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px}
 @media(max-width:960px){.blog-form-grid{grid-template-columns:1fr}}
+.page-tabs{display:flex;gap:2px;margin-bottom:22px;border-bottom:2px solid var(--border)}
+.page-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-mid);text-decoration:none;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;margin-bottom:-2px;display:inline-flex;align-items:center;gap:7px;transition:color .15s,background .15s}
+.page-tab:hover{color:var(--teal);background:var(--off-white)}
+.page-tab.active{color:var(--teal);background:#fff;border-color:var(--border);border-bottom-color:#fff}
 </style>
 </head>
 <body>
@@ -215,6 +219,13 @@ $v = $editPost ?? [];
 
   <div class="admin-content">
     <div class="admin-content-inner">
+
+      <?php if ($action === 'list'): ?>
+      <div class="page-tabs">
+        <a href="blog.php" class="page-tab active"><i class="fas fa-pen-nib"></i> Posts</a>
+        <a href="blog-cats.php" class="page-tab"><i class="fas fa-folder"></i> Categories</a>
+      </div>
+      <?php endif; ?>
 
       <?php if ($msg === 'added'):   ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Post published successfully.</div><?php endif; ?>
       <?php if ($msg === 'updated'): ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Post updated successfully.</div><?php endif; ?>
@@ -483,7 +494,7 @@ $v = $editPost ?? [];
 </div>
 
 <!-- TinyMCE rich text editor -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.10.9/tinymce.min.js"></script>
 <script src="js/admin.js"></script>
 <script>
 <?php if ($action !== 'list'): ?>

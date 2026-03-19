@@ -1,0 +1,103 @@
+#  GPS Lanka Travels — .htaccess
+
+Options -Indexes
+
+# REWRITE ENGINE
+RewriteEngine On
+RewriteBase /
+
+# FORCE HTTPS
+# Uncomment these two lines once SSL is active on cPanel:
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# FORCE WWW (optional — pick one or the other)
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
+
+# SERVE sitemap.xml dynamically
+RewriteRule ^sitemap\.xml$ sitemap.xml.php [L]
+
+# REMOVE .php EXTENSION FROM URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# REDIRECT index.php → / (avoid duplicate content)
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+index\.php [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+
+# PROTECT ADMIN FOLDER (optional basic layer) 
+# Remove the # below if you want to password-protect /admin at server level
+# AuthType Basic
+# AuthName "Admin Area"
+# AuthUserFile /home/yourusername/.htpasswds/gps-lanka-admin
+# Require valid-user
+
+# BLOCK ACCESS TO SENSITIVE FILES 
+<FilesMatch "\.(sql|log|env|bak|sh|git|md|json)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Block .htaccess itself from being read
+<Files ".htaccess">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Block access to includes directory directly
+RewriteRule ^includes/ - [F,L]
+RewriteRule ^admin/includes/ - [F,L]
+
+# CUSTOM ERROR PAGES 
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php
+
+# COMPRESSION (faster page loads) 
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+    AddOutputFilterByType DEFLATE text/xml text/plain image/svg+xml
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# BROWSER CACHING (faster repeat visits) 
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg     "access plus 1 month"
+    ExpiresByType image/jpeg    "access plus 1 month"
+    ExpiresByType image/png     "access plus 1 month"
+    ExpiresByType image/webp    "access plus 1 month"
+    ExpiresByType image/gif     "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/x-icon  "access plus 1 year"
+    ExpiresByType text/css      "access plus 1 week"
+    ExpiresByType text/javascript        "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType application/json       "access plus 0 seconds"
+</IfModule>
+
+# SECURITY HEADERS 
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # Prevent MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    # XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # Remove server signature
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# PHP SETTINGS 
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value upload_max_filesize 20M
+    php_value post_max_size 22M
+    php_value max_execution_time 60
+</IfModule>

@@ -9,6 +9,20 @@ $formError  = '';
 $msg        = $_GET['msg'] ?? '';
 $editId     = isset($_GET['edit']) ? (int)$_GET['edit'] : 0;
 
+/* ── SAFE MIGRATION ── */
+$conn->query("CREATE TABLE IF NOT EXISTS partners (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(120) NOT NULL,
+    logo        VARCHAR(300) DEFAULT NULL,
+    label       VARCHAR(120) DEFAULT NULL,
+    url         VARCHAR(300) DEFAULT NULL,
+    icon_class  VARCHAR(100) DEFAULT NULL,
+    icon_color  VARCHAR(20)  DEFAULT '#0f5252',
+    sort_order  SMALLINT     DEFAULT 0,
+    is_active   TINYINT(1)   DEFAULT 1,
+    created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
 /* ── DELETE ── */
 if (isset($_GET['delete'])) {
     $id  = (int)$_GET['delete'];

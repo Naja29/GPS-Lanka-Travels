@@ -180,21 +180,131 @@ CREATE TABLE IF NOT EXISTS `why_us` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
+-- Team Members
+CREATE TABLE IF NOT EXISTS `team` (
+  `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `name`        VARCHAR(120) NOT NULL,
+  `role`        VARCHAR(120) DEFAULT NULL,
+  `bio`         TEXT DEFAULT NULL,
+  `photo`       VARCHAR(300) DEFAULT NULL,
+  `facebook`    VARCHAR(300) DEFAULT NULL,
+  `instagram`   VARCHAR(300) DEFAULT NULL,
+  `linkedin`    VARCHAR(300) DEFAULT NULL,
+  `sort_order`  SMALLINT UNSIGNED DEFAULT 0,
+  `is_active`   TINYINT(1) DEFAULT 1,
+  `created_at`  DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Services (What We Offer)
+CREATE TABLE IF NOT EXISTS `services` (
+  `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `title`       VARCHAR(150) NOT NULL,
+  `description` TEXT DEFAULT NULL,
+  `icon`        VARCHAR(80)  DEFAULT 'fas fa-star',
+  `image`       VARCHAR(300) DEFAULT NULL,
+  `sort_order`  SMALLINT UNSIGNED DEFAULT 0,
+  `is_active`   TINYINT(1) DEFAULT 1,
+  `created_at`  DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Destination Categories
+CREATE TABLE IF NOT EXISTS `destination_categories` (
+  `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `name`        VARCHAR(100) NOT NULL,
+  `slug`        VARCHAR(120) NOT NULL UNIQUE,
+  `icon`        VARCHAR(80)  DEFAULT 'fas fa-map-marker-alt',
+  `description` TEXT DEFAULT NULL,
+  `sort_order`  TINYINT UNSIGNED DEFAULT 0,
+  `created_at`  DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Destinations
+CREATE TABLE IF NOT EXISTS `destinations` (
+  `id`           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `category_id`  INT UNSIGNED DEFAULT NULL,
+  `title`        VARCHAR(200) NOT NULL,
+  `slug`         VARCHAR(220) NOT NULL UNIQUE,
+  `location`     VARCHAR(150) DEFAULT NULL,
+  `region`       VARCHAR(100) DEFAULT NULL,
+  `excerpt`      TEXT DEFAULT NULL,
+  `description`  LONGTEXT DEFAULT NULL,
+  `hero_image`   VARCHAR(300) DEFAULT NULL,
+  `gallery`      TEXT DEFAULT NULL,
+  `map_embed`    TEXT DEFAULT NULL,
+  `read_time`    TINYINT UNSIGNED DEFAULT 5,
+  `is_featured`  TINYINT(1) DEFAULT 0,
+  `is_active`    TINYINT(1) DEFAULT 1,
+  `sort_order`   SMALLINT UNSIGNED DEFAULT 0,
+  `created_at`   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`category_id`) REFERENCES `destination_categories`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Gallery Categories
+CREATE TABLE IF NOT EXISTS `gallery_categories` (
+  `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `name`        VARCHAR(100) NOT NULL,
+  `slug`        VARCHAR(120) NOT NULL UNIQUE,
+  `sort_order`  TINYINT UNSIGNED DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Newsletter Subscribers
+CREATE TABLE IF NOT EXISTS `newsletter_subscribers` (
+  `id`            INT AUTO_INCREMENT PRIMARY KEY,
+  `email`         VARCHAR(255) NOT NULL,
+  `subscribed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `is_active`     TINYINT(1) DEFAULT 1,
+  UNIQUE KEY `uq_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Tour Bookings
+CREATE TABLE IF NOT EXISTS `bookings` (
+  `id`          INT AUTO_INCREMENT PRIMARY KEY,
+  `tour_id`     INT DEFAULT NULL,
+  `tour_title`  VARCHAR(300) NOT NULL,
+  `name`        VARCHAR(120) NOT NULL,
+  `email`       VARCHAR(255) NOT NULL,
+  `phone`       VARCHAR(50)  DEFAULT NULL,
+  `tour_date`   DATE DEFAULT NULL,
+  `persons`     VARCHAR(50)  DEFAULT NULL,
+  `message`     TEXT DEFAULT NULL,
+  `status`      VARCHAR(20)  DEFAULT 'new',
+  `is_read`     TINYINT(1)   DEFAULT 0,
+  `notes`       TEXT DEFAULT NULL,
+  `ip_address`  VARCHAR(45)  DEFAULT NULL,
+  `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 -- Settings
 CREATE TABLE IF NOT EXISTS `settings` (
   `skey`  VARCHAR(100) PRIMARY KEY,
   `sval`  TEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 INSERT IGNORE INTO `settings` (`skey`,`sval`) VALUES
-('site_name','GPS Lanka Travels'),
-('site_tagline','Sri Lanka''s Premier Tour Operator'),
-('site_email','info@gpslankatravels.com'),
-('site_phone','+94 77 048 9956'),
-('site_whatsapp','94770489956'),
-('site_address','289/1 Madampagama, Kuleegoda, Ambalangoda, Sri Lanka'),
-('business_hours','Mon - Sun: 8:00 AM - 8:00 PM'),
-('facebook_url','https://facebook.com/gpslankatravels'),
-('instagram_url','https://instagram.com/gpslankatravels'),
-('tripadvisor_url','#'),
-('google_maps_embed',''),
-('meta_description','GPS Lanka Travels - Inbound tour operator in Sri Lanka. Custom tours, cultural experiences, wildlife safaris and honeymoon packages.');
+('site_name',          'GPS Lanka Travels'),
+('site_tagline',       'Sri Lanka''s Premier Tour Operator'),
+('site_email',         'info@gpslankatravels.com'),
+('site_phone',         '+94 77 048 9956'),
+('site_whatsapp',      '94770489956'),
+('site_address',       '289/1 Madampagama, Kuleegoda, Ambalangoda, Sri Lanka'),
+('business_hours',     'Mon - Sun: 8:00 AM - 8:00 PM'),
+('business_hours_json',''),
+('footer_about',       'Your trusted travel companion for unforgettable Sri Lanka experiences. Licensed, reliable and passionate about sharing the beauty of our island with the world.'),
+('footer_copyright',   '&copy; 2025 GPS Lanka Travels. All rights reserved.'),
+('facebook_url',       'https://facebook.com/gpslankatravels'),
+('instagram_url',      'https://instagram.com/gpslankatravels'),
+('youtube_url',        ''),
+('tiktok_url',         ''),
+('twitter_url',        ''),
+('tripadvisor_url',    '#'),
+('google_maps_embed',  ''),
+('maintenance_mode',   '0'),
+('maintenance_message','We''re currently upgrading our website. We''ll be back shortly!'),
+('meta_description',   'GPS Lanka Travels - Inbound tour operator in Sri Lanka. Custom tours, cultural experiences, wildlife safaris and honeymoon packages.');

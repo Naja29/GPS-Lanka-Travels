@@ -12,6 +12,33 @@ document.addEventListener('DOMContentLoaded', () => {
   let timer;
   const INTERVAL = 3500; // 3.5s — professional feel, not too fast/slow
 
+  const titleEl    = document.getElementById('heroTitle');
+  const subtitleEl = document.getElementById('heroSubtitle');
+  const ctasEl     = document.getElementById('heroCtas');
+
+  /* Update hero text content from slide data attributes */
+  function updateContent(slide) {
+    const title    = slide.dataset.title    || '';
+    const subtitle = slide.dataset.subtitle || '';
+    const btn1Text = slide.dataset.btn1Text || '';
+    const btn1Url  = slide.dataset.btn1Url  || '';
+    const btn2Text = slide.dataset.btn2Text || '';
+    const btn2Url  = slide.dataset.btn2Url  || '';
+
+    if (titleEl    && title)    titleEl.innerHTML    = title.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    if (subtitleEl && subtitle) subtitleEl.textContent = subtitle;
+
+    if (ctasEl && (btn1Text || btn2Text)) {
+      ctasEl.innerHTML = '';
+      if (btn1Text && btn1Url) {
+        ctasEl.innerHTML += `<a href="${btn1Url}" class="btn-primary"><i class="fas fa-map-marked-alt"></i> ${btn1Text}</a>`;
+      }
+      if (btn2Text && btn2Url) {
+        ctasEl.innerHTML += `<a href="${btn2Url}" class="btn-outline"><i class="fas fa-phone-alt"></i> ${btn2Text}</a>`;
+      }
+    }
+  }
+
   /* Go to specific slide */
   function goTo(n) {
     slides[current].classList.remove('active');
@@ -21,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     slides[current].classList.add('active');
     dots[current]?.classList.add('active');
+    updateContent(slides[current]);
   }
 
   /* Auto-play */

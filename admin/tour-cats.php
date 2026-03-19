@@ -3,7 +3,7 @@ session_start();
 require_once 'includes/db.php';
 require_once 'includes/auth.php';
 
-$activePage = 'tour-cats';
+$activePage = 'tours';
 $editItem   = null;
 $formError  = '';
 $msg        = $_GET['msg'] ?? '';
@@ -151,6 +151,10 @@ $v = $editItem ?? [];
 .edit-mode .form-sec-head h3,.edit-mode .form-sec-head i{color:#a8782a}
 .tour-count-badge{display:inline-flex;align-items:center;gap:4px;background:var(--teal-pale);color:var(--teal);font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
 @media(max-width:960px){.split-layout{grid-template-columns:1fr}.frow.c2{grid-template-columns:1fr}}
+.page-tabs{display:flex;gap:2px;margin-bottom:22px;border-bottom:2px solid var(--border)}
+.page-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-mid);text-decoration:none;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;margin-bottom:-2px;display:inline-flex;align-items:center;gap:7px;transition:color .15s,background .15s}
+.page-tab:hover{color:var(--teal);background:var(--off-white)}
+.page-tab.active{color:var(--teal);background:#fff;border-color:var(--border);border-bottom-color:#fff}
 </style>
 </head>
 <body>
@@ -172,6 +176,11 @@ $v = $editItem ?? [];
 
   <div class="admin-content">
     <div class="admin-content-inner">
+
+      <div class="page-tabs">
+        <a href="tours.php" class="page-tab"><i class="fas fa-map-marked-alt"></i> Tours</a>
+        <a href="tour-cats.php" class="page-tab active"><i class="fas fa-tags"></i> Categories</a>
+      </div>
 
       <?php if ($msg === 'added'):   ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Category added successfully.</div><?php endif; ?>
       <?php if ($msg === 'updated'): ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Category updated successfully.</div><?php endif; ?>

@@ -43,13 +43,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tour_type   = trim($_POST['tour_type']   ?? '');
     $description = trim($_POST['description'] ?? '');
     $highlights  = trim($_POST['highlights']  ?? '');
+    $includes    = trim($_POST['includes']    ?? '');
+    $excludes    = trim($_POST['excludes']    ?? '');
     $tips        = trim($_POST['tips']        ?? '');
     $itinerary   = trim($_POST['itinerary']   ?? '');
     $map_embed   = trim($_POST['map_embed']   ?? '');
     $is_featured = isset($_POST['is_featured']) ? 1 : 0;
     $is_active   = isset($_POST['is_active'])   ? 1 : 0;
     $postId      = (int)($_POST['tour_id']    ?? 0);
-    $seo_json    = json_encode([
+    // Build FAQ JSON from dynamic rows
+    $faqQs = $_POST['faq_q'] ?? [];
+    $faqAs = $_POST['faq_a'] ?? [];
+    $faqs  = [];
+    foreach ($faqQs as $i => $q) {
+        $q = trim($q); $a = trim($faqAs[$i] ?? '');
+        if ($q && $a) $faqs[] = ['q' => $q, 'a' => $a];
+    }
+    $faqs_json = $faqs ? json_encode($faqs, JSON_UNESCAPED_UNICODE) : '';
+    $seo_json  = json_encode([
         'title' => trim($_POST['seo_title'] ?? ''),
         'desc'  => trim($_POST['seo_desc']  ?? ''),
         'kw'    => trim($_POST['seo_kw']    ?? ''),
@@ -91,9 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ttE     = $conn->real_escape_string($tour_type);
             $descE   = $conn->real_escape_string($description);
             $hiE     = $conn->real_escape_string($highlights);
+            $incE    = $conn->real_escape_string($includes);
+            $excE    = $conn->real_escape_string($excludes);
             $tipsE   = $conn->real_escape_string($tips);
             $itinE   = $conn->real_escape_string($itinerary);
             $mapE    = $conn->real_escape_string($map_embed);
+            $faqsE   = $conn->real_escape_string($faqs_json);
             $seoE    = $conn->real_escape_string($seo_json);
             $imgE    = $conn->real_escape_string($imagePath);
 
@@ -102,18 +116,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     title='$titleE', slug='$slugE', short_desc='$sdE',
                     category_id=$catVal, price_note='$pnE', duration='$durE',
                     group_size='$gsE', description='$descE', highlights='$hiE',
+                    includes='$incE', excludes='$excE', faqs='$faqsE',
                     tips='$tipsE', itinerary='$itinE', map_embed='$mapE',
-                    includes='$seoE', is_featured=$is_featured, is_active=$is_active,
+                    seo_data='$seoE', is_featured=$is_featured, is_active=$is_active,
                     image='$imgE'
                     WHERE id=$postId");
                 header('Location: tours.php?msg=updated'); exit;
             } else {
                 $conn->query("INSERT INTO tours
                     (title,slug,short_desc,category_id,price_note,duration,group_size,
-                     description,highlights,tips,itinerary,map_embed,includes,is_featured,is_active,image)
+                     description,highlights,includes,excludes,faqs,tips,itinerary,map_embed,
+                     seo_data,is_featured,is_active,image)
                     VALUES
                     ('$titleE','$slugE','$sdE',$catVal,'$pnE','$durE','$gsE',
-                     '$descE','$hiE','$tipsE','$itinE','$mapE','$seoE',$is_featured,$is_active,'$imgE')");
+                     '$descE','$hiE','$incE','$excE','$faqsE','$tipsE','$itinE','$mapE',
+                     '$seoE',$is_featured,$is_active,'$imgE')");
                 header('Location: tours.php?msg=added'); exit;
             }
         }
@@ -132,7 +149,7 @@ $tours  = [];
 $search = trim($_GET['q'] ?? '');
 if ($action === 'list') {
     $where = $search ? "WHERE t.title LIKE '%" . $conn->real_escape_string($search) . "%'" : '';
-    $r = $conn->query("SELECT t.*, tc.name AS cat_name FROM tours t
+    $r = $conn->query("SELECT t.*, tc.name AS cat_name, tc.icon AS cat_icon FROM tours t
         LEFT JOIN tour_categories tc ON t.category_id = tc.id
         $where ORDER BY t.sort_order, t.created_at DESC");
     if ($r) while ($row = $r->fetch_assoc()) $tours[] = $row;
@@ -187,6 +204,10 @@ textarea.form-control{resize:vertical;min-height:80px}
 .empty-state{text-align:center;padding:60px 20px;color:var(--text-light)}
 .empty-state i{font-size:52px;margin-bottom:12px;display:block;opacity:.3}
 @media(max-width:768px){.frow.c2,.frow.c3,.frow.c5{grid-template-columns:1fr}}
+.page-tabs{display:flex;gap:2px;margin-bottom:22px;border-bottom:2px solid var(--border)}
+.page-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-mid);text-decoration:none;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;margin-bottom:-2px;display:inline-flex;align-items:center;gap:7px;transition:color .15s,background .15s}
+.page-tab:hover{color:var(--teal);background:var(--off-white)}
+.page-tab.active{color:var(--teal);background:#fff;border-color:var(--border);border-bottom-color:#fff}
 </style>
 </head>
 <body>
@@ -229,6 +250,13 @@ textarea.form-control{resize:vertical;min-height:80px}
   <div class="admin-content">
     <div class="admin-content-inner">
 
+      <?php if ($action === 'list'): ?>
+      <div class="page-tabs">
+        <a href="tours.php" class="page-tab active"><i class="fas fa-map-marked-alt"></i> Tours</a>
+        <a href="tour-cats.php" class="page-tab"><i class="fas fa-tags"></i> Categories</a>
+      </div>
+      <?php endif; ?>
+
       <?php if ($msg === 'added'):   ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Tour added successfully.</div><?php endif; ?>
       <?php if ($msg === 'updated'): ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> Tour updated successfully.</div><?php endif; ?>
       <?php if ($msg === 'deleted'): ?><div class="alert alert-warning"><i class="fas fa-trash"></i> Tour deleted.</div><?php endif; ?>
@@ -250,7 +278,7 @@ textarea.form-control{resize:vertical;min-height:80px}
               <tr>
                 <th style="width:80px">Image</th>
                 <th>Name</th>
-                <th>Category</th>
+                <th style="width:160px">Category</th>
                 <th style="width:130px">Price</th>
                 <th style="width:100px;text-align:center">Featured</th>
                 <th style="width:120px;text-align:center">Actions</th>
@@ -269,12 +297,15 @@ textarea.form-control{resize:vertical;min-height:80px}
               <td>
                 <div class="col-title"><?= htmlspecialchars($t['title']) ?></div>
                 <?php if ($t['duration']): ?>
-                  <div class="text-muted text-sm"><i class="fas fa-clock" style="font-size:11px"></i> <?= htmlspecialchars($t['duration']) ?></div>
+                  <div class="text-muted text-sm" style="margin-top:3px"><i class="fas fa-clock" style="font-size:10px"></i> <?= htmlspecialchars($t['duration']) ?></div>
                 <?php endif; ?>
               </td>
               <td>
                 <?php if ($t['cat_name']): ?>
-                  <span class="cat-tag"><?= htmlspecialchars($t['cat_name']) ?></span>
+                  <span class="cat-tag">
+                    <?php if ($t['cat_icon']): ?><i class="<?= htmlspecialchars($t['cat_icon']) ?>" style="margin-right:5px"></i><?php endif; ?>
+                    <?= htmlspecialchars($t['cat_name']) ?>
+                  </span>
                 <?php else: ?>
                   <span class="text-muted text-sm">—</span>
                 <?php endif; ?>
@@ -317,8 +348,9 @@ textarea.form-control{resize:vertical;min-height:80px}
       <?php else: ?>
       <!-- ============ ADD / EDIT FORM ============ -->
       <?php
-        $v   = $tour ?? [];
-        $seo = isset($v['includes']) ? (json_decode($v['includes'], true) ?? []) : [];
+        $v    = $tour ?? [];
+        $seo  = !empty($v['seo_data']) ? (json_decode($v['seo_data'], true) ?? []) : [];
+        $faqRows = !empty($v['faqs']) ? (json_decode($v['faqs'], true) ?? []) : [];
       ?>
       <div class="page-header">
         <div class="page-header-left">
@@ -327,7 +359,7 @@ textarea.form-control{resize:vertical;min-height:80px}
         </div>
       </div>
 
-      <form method="POST" enctype="multipart/form-data" id="tourForm">
+      <form method="POST" enctype="multipart/form-data" id="tourForm" onsubmit="serializeItinerary(); if(typeof tinymce!=='undefined') tinymce.triggerSave();">
         <input type="hidden" name="tour_id"        value="<?= $editId ?>"/>
         <input type="hidden" name="existing_image" value="<?= htmlspecialchars($v['image'] ?? '') ?>"/>
 
@@ -467,10 +499,138 @@ textarea.form-control{resize:vertical;min-height:80px}
               <label style="color:#c0392b"><i class="fas fa-lightbulb"></i> Insightful Tips (Pink Box)</label>
               <textarea name="tips" class="rich-area"><?= htmlspecialchars($v['tips'] ?? '') ?></textarea>
             </div>
+            <!-- ITINERARY DAY BUILDER -->
+            <?php
+            $itinRows = [];
+            $rawItin  = $v['itinerary'] ?? '';
+            if ($rawItin) {
+                $t2 = trim($rawItin);
+                if ($t2 && $t2[0] === '[') {
+                    $decoded = json_decode($t2, true);
+                    if (is_array($decoded)) $itinRows = $decoded;
+                }
+                if (empty($itinRows)) {
+                    // Parse HTML (headings or strong Day N)
+                    if (strpos($rawItin, '<') !== false) {
+                        if (preg_match('/<h[2-4]/i', $rawItin)) {
+                            preg_match_all('/<h[2-4][^>]*>(.*?)<\/h[2-4]>(.*?)(?=<h[2-4]|$)/si', $rawItin, $pm);
+                            foreach ($pm[1] as $pi => $ptitle) {
+                                $ptitle = trim(strip_tags($ptitle));
+                                if ($ptitle) $itinRows[] = ['title' => $ptitle, 'body' => trim(strip_tags($pm[2][$pi]))];
+                            }
+                        }
+                        if (empty($itinRows) && preg_match('/Day\s*\d+/i', $rawItin)) {
+                            preg_match_all('/<p[^>]*>\s*<strong[^>]*>(Day\s*\d+[^<]*)<\/strong>(.*?)<\/p>(.*?)(?=<p[^>]*>\s*<strong[^>]*>Day|$)/si', $rawItin, $pm);
+                            foreach ($pm[1] as $pi => $ptitle) {
+                                $ptitle = trim(strip_tags($ptitle));
+                                if ($ptitle) $itinRows[] = ['title' => $ptitle, 'body' => trim(strip_tags($pm[2][$pi].' '.$pm[3][$pi]))];
+                            }
+                        }
+                    } else {
+                        // Plain text
+                        $days = preg_split('/\n(?=Day\s+\d|Stop\s+\d|\d+[\.\)])/i', $rawItin);
+                        if (count($days) <= 1) $days = array_filter(explode("\n\n", $rawItin));
+                        foreach ($days as $pd) {
+                            $lines = array_filter(explode("\n", trim($pd)));
+                            if (!$lines) continue;
+                            $pt = array_shift($lines);
+                            $itinRows[] = ['title' => $pt, 'body' => implode(' ', $lines)];
+                        }
+                    }
+                }
+            }
+            if (empty($itinRows)) $itinRows = [['title' => '', 'body' => '']];
+            ?>
             <div class="fgrp">
-              <label>Itinerary / FAQ Content</label>
-              <textarea name="itinerary" class="rich-area"><?= htmlspecialchars($v['itinerary'] ?? '') ?></textarea>
+              <label><i class="fas fa-route" style="color:var(--gold)"></i> Tour Itinerary <small style="font-weight:400;color:var(--text-light);font-size:11px;text-transform:none;letter-spacing:0">&nbsp;— Day-by-day builder</small></label>
+              <input type="hidden" name="itinerary" id="itineraryJson"/>
+              <div id="itinBuilder" style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+                <?php foreach ($itinRows as $ri => $rday): ?>
+                <div class="itin-day-row" style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;">
+                  <div style="background:linear-gradient(135deg,var(--teal-dark),var(--teal));padding:10px 16px;display:flex;align-items:center;gap:12px">
+                    <span class="itin-day-badge" style="background:rgba(201,168,76,0.25);border:1.5px solid var(--gold);color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:700;padding:2px 14px;border-radius:50px;white-space:nowrap">Day <?= $ri + 1 ?></span>
+                    <input type="text" class="itin-title" placeholder="Title — e.g. Arrival &amp; Transfer to Sigiriya"
+                           value="<?= htmlspecialchars($rday['title'] ?? '') ?>"
+                           style="flex:1;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 12px;border-radius:8px;font-size:13.5px;font-family:'DM Sans',sans-serif;outline:none"/>
+                    <button type="button" onclick="removeItinDay(this)" title="Remove day"
+                            style="background:rgba(231,76,60,0.25);border:1px solid rgba(231,76,60,0.4);color:#ff8a80;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                  <div style="padding:14px 16px">
+                    <textarea class="itin-body form-control" rows="3"
+                              placeholder="Describe what happens on this day…"
+                              style="resize:vertical"><?= htmlspecialchars($rday['body'] ?? '') ?></textarea>
+                  </div>
+                </div>
+                <?php endforeach; ?>
+              </div>
+              <button type="button" onclick="addItinDay()" class="btn btn-outline btn-sm" style="margin-top:10px">
+                <i class="fas fa-plus"></i> Add Day
+              </button>
             </div>
+          </div>
+        </div>
+
+        <!-- INCLUDES / EXCLUDES -->
+        <div class="form-section">
+          <div class="form-sec-head">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>What's Included &amp; Excluded</h3>
+          </div>
+          <div class="form-sec-body">
+            <div class="frow c2">
+              <div class="fgrp">
+                <label style="color:#27ae60"><i class="fas fa-check-circle"></i> Included in Tour</label>
+                <small class="text-muted" style="font-size:12px;margin-bottom:6px;display:block">Use bullet list (• button in toolbar) — each bullet becomes one item</small>
+                <textarea name="includes" class="rich-area" style="min-height:200px"><?= htmlspecialchars($v['includes'] ?? '') ?></textarea>
+              </div>
+              <div class="fgrp">
+                <label style="color:#e74c3c"><i class="fas fa-times-circle"></i> Not Included</label>
+                <small class="text-muted" style="font-size:12px;margin-bottom:6px;display:block">Use bullet list (• button in toolbar) — each bullet becomes one item</small>
+                <textarea name="excludes" class="rich-area" style="min-height:200px"><?= htmlspecialchars($v['excludes'] ?? '') ?></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="form-section">
+          <div class="form-sec-head">
+            <i class="fas fa-question-circle"></i>
+            <h3>Frequently Asked Questions</h3>
+          </div>
+          <div class="form-sec-body">
+            <div id="faqList">
+              <?php if ($faqRows): foreach ($faqRows as $fi => $faq): ?>
+              <div class="faq-row" style="background:var(--off-white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:12px;position:relative">
+                <button type="button" onclick="removeFaq(this)" style="position:absolute;top:12px;right:12px;background:var(--red-pale);color:var(--red);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center"><i class="fas fa-times"></i></button>
+                <div class="fgrp" style="margin-bottom:10px">
+                  <label>Question</label>
+                  <input type="text" name="faq_q[]" class="form-control" value="<?= htmlspecialchars($faq['q'] ?? '') ?>" placeholder="e.g. Is pickup included?"/>
+                </div>
+                <div class="fgrp">
+                  <label>Answer</label>
+                  <textarea name="faq_a[]" class="form-control" rows="2" placeholder="Your answer here…"><?= htmlspecialchars($faq['a'] ?? '') ?></textarea>
+                </div>
+              </div>
+              <?php endforeach; else: ?>
+              <div class="faq-row" style="background:var(--off-white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:12px;position:relative">
+                <button type="button" onclick="removeFaq(this)" style="position:absolute;top:12px;right:12px;background:var(--red-pale);color:var(--red);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center"><i class="fas fa-times"></i></button>
+                <div class="fgrp" style="margin-bottom:10px">
+                  <label>Question</label>
+                  <input type="text" name="faq_q[]" class="form-control" placeholder="e.g. Is pickup included?"/>
+                </div>
+                <div class="fgrp">
+                  <label>Answer</label>
+                  <textarea name="faq_a[]" class="form-control" rows="2" placeholder="Your answer here…"></textarea>
+                </div>
+              </div>
+              <?php endif; ?>
+            </div>
+            <button type="button" onclick="addFaq()" class="btn btn-outline btn-sm" style="margin-top:4px">
+              <i class="fas fa-plus"></i> Add Another Question
+            </button>
           </div>
         </div>
 
@@ -538,8 +698,8 @@ textarea.form-control{resize:vertical;min-height:80px}
   </div>
 </div>
 
-<!-- TinyMCE rich text editor -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<!-- TinyMCE 5 (self-hosted CDN, no API key required) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.10.9/tinymce.min.js"></script>
 <script src="js/admin.js"></script>
 <script>
 <?php if ($action !== 'list'): ?>
@@ -557,6 +717,69 @@ tinymce.init({
   }
 });
 <?php endif; ?>
+
+function addFaq() {
+  const html = `<div class="faq-row" style="background:var(--off-white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:12px;position:relative">
+    <button type="button" onclick="removeFaq(this)" style="position:absolute;top:12px;right:12px;background:var(--red-pale);color:var(--red);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center"><i class="fas fa-times"></i></button>
+    <div class="fgrp" style="margin-bottom:10px">
+      <label style="font-size:11px;font-weight:600;color:#888;letter-spacing:.8px;text-transform:uppercase">Question</label>
+      <input type="text" name="faq_q[]" class="form-control" placeholder="e.g. Is pickup included?"/>
+    </div>
+    <div class="fgrp">
+      <label style="font-size:11px;font-weight:600;color:#888;letter-spacing:.8px;text-transform:uppercase">Answer</label>
+      <textarea name="faq_a[]" class="form-control" rows="2" placeholder="Your answer here…"></textarea>
+    </div>
+  </div>`;
+  document.getElementById('faqList').insertAdjacentHTML('beforeend', html);
+}
+function removeFaq(btn) {
+  const row = btn.closest('.faq-row');
+  if (document.querySelectorAll('.faq-row').length > 1) row.remove();
+  else { row.querySelectorAll('input,textarea').forEach(el => el.value = ''); }
+}
+
+/* ── ITINERARY DAY BUILDER ── */
+function renumberDays() {
+  document.querySelectorAll('#itinBuilder .itin-day-row').forEach((row, i) => {
+    const badge = row.querySelector('.itin-day-badge');
+    if (badge) badge.textContent = 'Day ' + (i + 1);
+  });
+}
+function addItinDay() {
+  const count = document.querySelectorAll('#itinBuilder .itin-day-row').length + 1;
+  const html = `<div class="itin-day-row" style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;">
+    <div style="background:linear-gradient(135deg,var(--teal-dark),var(--teal));padding:10px 16px;display:flex;align-items:center;gap:12px">
+      <span class="itin-day-badge" style="background:rgba(201,168,76,0.25);border:1.5px solid var(--gold);color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:700;padding:2px 14px;border-radius:50px;white-space:nowrap">Day ${count}</span>
+      <input type="text" class="itin-title" placeholder="Title — e.g. Arrival &amp; Transfer to Sigiriya"
+             style="flex:1;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 12px;border-radius:8px;font-size:13.5px;font-family:'DM Sans',sans-serif;outline:none"/>
+      <button type="button" onclick="removeItinDay(this)" title="Remove day"
+              style="background:rgba(231,76,60,0.25);border:1px solid rgba(231,76,60,0.4);color:#ff8a80;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div style="padding:14px 16px">
+      <textarea class="itin-body form-control" rows="3" placeholder="Describe what happens on this day…" style="resize:vertical"></textarea>
+    </div>
+  </div>`;
+  document.getElementById('itinBuilder').insertAdjacentHTML('beforeend', html);
+  // Focus new title input
+  const rows = document.querySelectorAll('#itinBuilder .itin-day-row');
+  rows[rows.length - 1].querySelector('.itin-title').focus();
+}
+function removeItinDay(btn) {
+  const rows = document.querySelectorAll('#itinBuilder .itin-day-row');
+  if (rows.length > 1) { btn.closest('.itin-day-row').remove(); renumberDays(); }
+  else { btn.closest('.itin-day-row').querySelectorAll('input,textarea').forEach(el => el.value = ''); }
+}
+function serializeItinerary() {
+  const days = [];
+  document.querySelectorAll('#itinBuilder .itin-day-row').forEach(row => {
+    const title = row.querySelector('.itin-title').value.trim();
+    const body  = row.querySelector('.itin-body').value.trim();
+    if (title) days.push({ title, body });
+  });
+  document.getElementById('itineraryJson').value = days.length ? JSON.stringify(days) : '';
+}
 
 function confirmDelete(id, name) {
   document.getElementById('delModalText').textContent = 'Are you sure you want to delete "' + name + '"? This cannot be undone.';

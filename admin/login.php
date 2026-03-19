@@ -5,11 +5,22 @@ require_once 'includes/db.php';
 
 $error = ''; $timeout = isset($_GET['timeout']);
 
+/* Live stats for login panel */
+$statTours = 0; $statBookings = 0; $statGuests = 0;
+try {
+    $r = $conn->query("SELECT COUNT(*) as c FROM tours WHERE is_active=1");
+    if ($r) $statTours = (int)$r->fetch_assoc()['c'];
+    $r = $conn->query("SELECT COUNT(*) as c FROM bookings");
+    if ($r) $statBookings = (int)$r->fetch_assoc()['c'];
+    $r = $conn->query("SELECT COUNT(*) as c FROM testimonials WHERE is_active=1");
+    if ($r) $statGuests = (int)$r->fetch_assoc()['c'];
+} catch (Exception $e) { /* tables may not exist yet */ }
+
 /* Fetch site logo from settings  */
 $siteLogo = '';
 try {
-    $logoRow = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='site_logo' LIMIT 1");
-    if ($logoRow && $r = $logoRow->fetch_assoc()) { $siteLogo = $r['setting_value']; }
+    $logoRow = $conn->query("SELECT sval FROM settings WHERE skey='site_logo' LIMIT 1");
+    if ($logoRow && $r = $logoRow->fetch_assoc()) { $siteLogo = $r['sval']; }
 } catch (Exception $e) { /* table may not exist yet */ }
 // Fallback to default images/logo.png
 if (!$siteLogo && file_exists(__DIR__ . '/../images/logo.png')) { $siteLogo = 'images/logo.png'; }
@@ -54,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--teal-dark:#0a3d3d;--teal:#0f5252;--teal-light:#1a7575;--gold:#c9a84c;--gold-light:#e2c97e;--white:#fff;--off-white:#f8f6f0}
     html,body{height:100%;width:100%;overflow:hidden;font-family:'DM Sans',sans-serif;display:flex;margin:0;padding:0}
-    .login-visual{flex:1;position:relative;overflow:hidden;background:url('../images/hero-slide-1.jpg') center/cover no-repeat;min-height:100vh;}
+    .login-visual{flex:1;position:relative;overflow:hidden;background:url('../images/hero-slide-2.jpg') center/cover no-repeat;min-height:100vh;}
     .login-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(145deg,rgba(10,61,61,.88) 0%,rgba(10,61,61,.6) 40%,rgba(0,0,0,.65) 100%);z-index:1}
     .login-visual::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 80%,rgba(201,168,76,.12) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(201,168,76,.08) 0%,transparent 50%);z-index:2}
     .visual-inner{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:48px}
@@ -153,11 +164,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p class="v-sub">Control tours, bookings, enquiries, gallery and all website content from one elegant dashboard.</p>
       </div>
       <div class="v-stats">
-        <div><div class="v-stat-num">500+</div><div class="v-stat-lbl">Happy Guests</div></div>
+        <div><div class="v-stat-num"><?= $statGuests ?>+</div><div class="v-stat-lbl">Happy Guests</div></div>
         <div class="v-stat-div"></div>
-        <div><div class="v-stat-num">50+</div><div class="v-stat-lbl">Tour Packages</div></div>
+        <div><div class="v-stat-num"><?= $statTours ?>+</div><div class="v-stat-lbl">Tour Packages</div></div>
         <div class="v-stat-div"></div>
-        <div><div class="v-stat-num">10+</div><div class="v-stat-lbl">Years Experience</div></div>
+        <div><div class="v-stat-num"><?= $statBookings ?>+</div><div class="v-stat-lbl">Bookings</div></div>
       </div>
     </div>
   </div>
@@ -200,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <div class="form-footer">
-      <p>GPS Lanka Travels &copy; <?= date('Y') ?> &nbsp;·&nbsp; <a href="../index.html" target="_blank">View Website</a> &nbsp;·&nbsp; <a href="mailto:info@gpslankatravels.com">Support</a></p>
+      <p>GPS Lanka Travels &copy; <?= date('Y') ?> &nbsp;·&nbsp; <a href="../index.php" target="_blank">View Website</a> &nbsp;·&nbsp; <a href="mailto:info@gpslankatravels.com">Support</a></p>
     </div>
   </div>
 
